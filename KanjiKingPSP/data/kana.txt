@@ -1,3 +1,112 @@
+あ	a	a
+い	i	i
+う	u	u͍
+え	e	e
+お	o	o
+か	ka	ka
+き	ki	ki
+く	ku	ku͍
+け	ke	ke
+こ	ko	ko
+きゃ	kya	kʲa
+きゅ	kyu	kʲu͍
+きょ	kyo	kʲo	S
+さ	sa	sa
+し	shi	ɕi
+す	su	su͍
+せ	se	se
+そ	so	so
+しゃ	sha	ɕa
+しゅ	shu	ɕu͍
+しょ	sho	ɕo	T
+た	ta	ta
+ち	chi	 t͡ɕi
+つ	tsu	 t͡su͍
+て	te	te
+と	to	to
+ちゃ	cha	 t͡ɕa
+ちゅ	chu	 t͡ɕu͍
+ちょ	cho	 t͡ɕo	N
+な	na	na
+に	ni	nʲi
+ぬ	nu	nu͍
+ね	ne	ne
+の	no	no
+にゃ	nya	nʲa
+にゅ	nyu	nʲu͍
+にょ	nyo	nʲo	H
+は	ha	ha
+ひ	hi	çi
+ふ	fu	ɸu͍
+へ	he	he
+ほ	ho	ho
+ひゃ	hya	ça
+ひゅ	hyu	çu͍
+ひょ	hyo	ço	M
+ま	ma	ma
+み	mi	mi
+む	mu	mu͍
+め	me	me
+も	mo	mo
+みゃ	mya	mʲa
+みゅ	myu	mʲu͍
+みょ	myo	mʲo	Y
+や	ya	ja
+ゆ	yu	ju͍
+よ	yo	jo
+ら	ra	ɽa
+り	ri	ɽi
+る	ru	ɽu͍
+れ	re	ɽe
+ろ	ro	ɽo
+りゃ	rya	ɽʲa
+りゅ	ryu	ɽʲu͍
+りょ	ryo	ɽʲo	W
+わ	wa	wa
+ゐ	i/wi	i
+ゑ	e/we	e
+を	o/wo	o
+ん	n	n
+が	ga	ɡa
+ぎ	gi	ɡi
+ぐ	gu	ɡu͍
+げ	ge	ɡe
+ご	go	ɡo
+ぎゃ	gya	ɡʲa
+ぎゅ	gyu	ɡʲu͍
+ぎょ	gyo	ɡʲo	Z
+ざ	za	za
+じ	ji	d͡ʑi
+ず	zu	zu͍
+ぜ	ze	ze
+ぞ	zo	zo
+じゃ	ja	d͡ʑa
+じゅ	ju	d͡ʑu͍
+じょ	jo	d͡ʑo	D
+だ	da	da
+ぢ	ji	d͡ʑi
+づ	zu	zu͍
+で	de	de
+ど	do	do
+ぢゃ	ja	d͡ʑa
+ぢゅ	ju	d͡ʑu͍
+ぢょ	jo	d͡ʑo	B
+ば	ba	ba
+び	bi	bi
+ぶ	bu	bu͍
+べ	be	be
+ぼ	bo	bo
+びゃ	bya	bʲa
+びゅ	byu	bʲu͍
+びょ	byo	bʲo	P
+ぱ	pa	pa
+ぴ	pi	pi
+ぷ	pu	pu͍
+ぺ	pe	pe
+ぽ	po	po
+ぴゃ	pya	pʲa
+ぴゅ	pyu	pʲu͍
+ぴょ	pyo	pʲo
 ア	a	a
 イ	i	i
 ウ	u	u͍
