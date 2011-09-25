@@ -10,7 +10,7 @@
 こ	ko	ko
 きゃ	kya	kʲa
 きゅ	kyu	kʲu͍
-きょ	kyo	kʲo	S
+きょ	kyo	kʲo
 さ	sa	sa
 し	shi	ɕi
 す	su	su͍
@@ -18,7 +18,7 @@
 そ	so	so
 しゃ	sha	ɕa
 しゅ	shu	ɕu͍
-しょ	sho	ɕo	T
+しょ	sho	ɕo
 た	ta	ta
 ち	chi	 t͡ɕi
 つ	tsu	 t͡su͍
@@ -26,7 +26,7 @@
 と	to	to
 ちゃ	cha	 t͡ɕa
 ちゅ	chu	 t͡ɕu͍
-ちょ	cho	 t͡ɕo	N
+ちょ	cho	 t͡ɕo
 な	na	na
 に	ni	nʲi
 ぬ	nu	nu͍
@@ -34,7 +34,7 @@
 の	no	no
 にゃ	nya	nʲa
 にゅ	nyu	nʲu͍
-にょ	nyo	nʲo	H
+にょ	nyo	nʲo
 は	ha	ha
 ひ	hi	çi
 ふ	fu	ɸu͍
@@ -42,7 +42,7 @@
 ほ	ho	ho
 ひゃ	hya	ça
 ひゅ	hyu	çu͍
-ひょ	hyo	ço	M
+ひょ	hyo	ço
 ま	ma	ma
 み	mi	mi
 む	mu	mu͍
@@ -50,7 +50,7 @@
 も	mo	mo
 みゃ	mya	mʲa
 みゅ	myu	mʲu͍
-みょ	myo	mʲo	Y
+みょ	myo	mʲo
 や	ya	ja
 ゆ	yu	ju͍
 よ	yo	jo
@@ -61,7 +61,7 @@
 ろ	ro	ɽo
 りゃ	rya	ɽʲa
 りゅ	ryu	ɽʲu͍
-りょ	ryo	ɽʲo	W
+りょ	ryo	ɽʲo
 わ	wa	wa
 ゐ	i/wi	i
 ゑ	e/we	e
@@ -74,7 +74,7 @@
 ご	go	ɡo
 ぎゃ	gya	ɡʲa
 ぎゅ	gyu	ɡʲu͍
-ぎょ	gyo	ɡʲo	Z
+ぎょ	gyo	ɡʲo
 ざ	za	za
 じ	ji	d͡ʑi
 ず	zu	zu͍
@@ -82,7 +82,7 @@
 ぞ	zo	zo
 じゃ	ja	d͡ʑa
 じゅ	ju	d͡ʑu͍
-じょ	jo	d͡ʑo	D
+じょ	jo	d͡ʑo
 だ	da	da
 ぢ	ji	d͡ʑi
 づ	zu	zu͍
@@ -90,7 +90,7 @@
 ど	do	do
 ぢゃ	ja	d͡ʑa
 ぢゅ	ju	d͡ʑu͍
-ぢょ	jo	d͡ʑo	B
+ぢょ	jo	d͡ʑo
 ば	ba	ba
 び	bi	bi
 ぶ	bu	bu͍
@@ -98,7 +98,7 @@
 ぼ	bo	bo
 びゃ	bya	bʲa
 びゅ	byu	bʲu͍
-びょ	byo	bʲo	P
+びょ	byo	bʲo
 ぱ	pa	pa
 ぴ	pi	pi
 ぷ	pu	pu͍

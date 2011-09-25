@@ -2,11 +2,11 @@
 丨	Vertikalstrich
 丶	Tropfstrich
 丿乀乁	Schrägstrich
-乙乚乛	gerundeter Vertikalstrich, Haken, der/die/das zweite
+乙乚乛	Angelhaken, Zweiter
 亅	Vertikalstrich mit Haken
 二	zwei
-亠	Deckel (Kopf)
-人	Mensch, jeder, jemand, alle, Persönlichkeit, Charakter
+亠	Deckel, Kopf
+人亻𠆢	Mensch, jeder, jemand, alle, Persönlichkeit, Charakter
 儿	Beine, Kind, Jugendlicher, Sohn
 入	eintreten, betreten, Einkommen, übereinstimmen mit
 八	acht
@@ -15,15 +15,15 @@
 冫	Eis
 几	Tischchen
 凵	Behälter, geöffneter Mund
-刀刁刂	Messer, Schwert, Hiebwaffe, Säbel
+刀刂刁	Messer, Schwert, Hiebwaffe, Säbel
 力	Kraft, Stärke, Fähigkeit
 勹	einwickeln, umarmen
 匕	Löffel
 匚	Kasten
 匸	verstecken, runde Schachtel
 十	zehn, völlig, vollständig
-卜	(Chinesisches) Orakel
-卩	Siegel
+卜	Orakel
+卩㔾	Siegel
 厂	Abhang
 厶	privat
 又	wieder, noch, Hand
@@ -41,7 +41,7 @@
 寸	Daumen, Zoll
 小	klein, geringfügig, unbedeutend, jung
 尢尣	lahm, gebrochenes Bein
-尸	Leichnam, Leiche
+尸	Leichnam, Flagge
 屮	Spross, Keim
 山	Berg, Gebirge
 巛巜川	Strom, Fluss
@@ -49,7 +49,7 @@
 己已巳	selbst, persönlich, eigen
 巾	Tuch, Schal
 干	trocken, Schild (Waffe)
-幺	jung, gering, klein
+幺	jung, gering, klein, Faden
 广	Schrägdach
 廴	bewegen, marschieren
 廾	gefaltete Hände, zwanzig
@@ -63,7 +63,7 @@
 戸戶户	Waffe, Tür, Haus, Familie
 手	Hand, in der Hand halten
 支	Zweig, stützen, aufrichten, Abzweigung
-攴攵	schlagen, Peitsche
+攴攵	schlagen, Peitsche, Klappstuhl
 文	Kultur, Schrift(zeichen), Sprache
 斗	Scheffel, Dou (Hohlmaß)
 斤	Axt, Pfund
@@ -72,7 +72,7 @@
 日	Sonne, Tag
 曰	sagen, sprechen
 月	Mond, Monat
-木朩	Baum, Holz
+木	Baum, Holz
 欠	mangeln, gähnen
 止	anhalten, aufhören, stoppen
 歹歺	zersetzen, schlecht
@@ -93,13 +93,13 @@
 牛	Rind; 2. Erdzweig 
 犬	Hund
 玄	dunkel
-玉玊王	Jade (König)
+玉玊王	Juwel, Kugel, Jade (König)
 瓜	Melone, Kürbis, Gurke
 瓦	Ziegel
 甘	süß, wohlschmeckend
 生	geboren werden, leben, erzeugen
 用甩	gebrauchen, benutzen, nötig haben
-田由甲申甴电	Reisfeld
+田由甲申	Reisfeld
 疋	Rolle Kleiderstoff, Stoffballen
 疒	Krankheit
 癶	gespreizte Beine, zwei Hände oberhalb
@@ -151,7 +151,7 @@
 豆	Bohne
 豕	Schwein
 豸	Reptil, Katze, kleines haariges Tier
-貝	Muschel- oder Schneckengeld, Kauri(schnecken)
+貝	Muschel- oder Schneckengeld, Kauri
 赤	zinnoberrot, nackt
 走赱	laufen, fortgehen
 足	Fuß
@@ -163,7 +163,7 @@
 邑	Gemeinde, Dorf
 酉	Weinkrug, Alkohol
 釆	trennen, unterscheiden, auswählen
-里	Meile, Dorf, Maßeinheit 0,5 km
+里	Ri (~4 km), Dorf
 金釒	Metall, Gold
 長镸	lang, älter, wachsen
 門	Tor, Tür
@@ -202,7 +202,7 @@
 黍	Hirse
 黒黑	schwarz
 黹	sticken, Näharbeit
-黽黾	Frosch, Amphibie
+黽	Frosch, Amphibie
 鼎	dreibeiniger Kessel, Dreifuß
 鼓鼔	Trommel
 鼠	Ratte, Maus; 1. Erdzweig 

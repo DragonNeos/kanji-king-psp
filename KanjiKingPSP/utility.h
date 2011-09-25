@@ -130,18 +130,7 @@ inline void Blend(u32 *dst, u32 src = WHITE, float alpha = 1.0f)
 						G = BYTE_TO_FLOAT * ((src & 0x0000FF00) >> 8),
 						B = BYTE_TO_FLOAT * ((src & 0x00FF0000) >> 16),
 						A = BYTE_TO_FLOAT * ((src)              >> 24) * alpha,
-/*	float	r = BYTE_TO_FLOAT * ((rgba)       & 0xFF),
-			g = BYTE_TO_FLOAT * ((rgba >>  8) & 0xFF),
-			b = BYTE_TO_FLOAT * ((rgba >> 16) & 0xFF);
-//			a = BYTE_TO_FLOAT * ((rgba >> 24));
-
-	if(src!=WHITE)
-	{
-		const float	R = BYTE_TO_FLOAT * ((src)       & 0xFF),
-						G = BYTE_TO_FLOAT * ((src >>  8) & 0xFF),
-						B = BYTE_TO_FLOAT * ((src >> 16) & 0xFF),
-						A = BYTE_TO_FLOAT * ((src >> 24)) * alpha,
-*/						d = 1.0f - A;
+						d = 1.0f - A;
 
 		r = r*d + R*A;
 		g = g*d + G*A;

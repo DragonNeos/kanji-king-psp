@@ -89,7 +89,7 @@ public:
 
 //+------------------------------------------------------------------+
 	vec(const file &f)
-	:	length	(f.length()+1),
+	:	length	(f.length()/sizeof(T)),
 		data		((T*)malloc((length+1)*sizeof(T)))
 	{
 		if(data)
