@@ -29,7 +29,7 @@
 #include "ttf.h"
 #include "SimpleRNG.h"
 
-PSP_MODULE_INFO("Kanji King", PSP_MODULE_USER, 1, 1);
+PSP_MODULE_INFO("Kanji King", PSP_MODULE_USER, 1, 3);
 
 static int running = 1;
 static unsigned int __attribute__((aligned(16))) list[262144];
@@ -108,10 +108,13 @@ u32 ColorLevel(BYTE b)
 	return 0xFF000000 | (B<<16) | (G<<8) | R;
 }
 
+int repetition = 1;
 double ProbLevel(BYTE b)
 {
+	const double r = repetition * repetition;
 //	return 0.00390625 * (257.0 / (1.0 + double(b)) - 1.0);
-	return 0.00390625 * (256 - int(b));
+	return r / (r + double(b));
+//	return 0.00390625 * (256 - int(b));
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -244,6 +247,7 @@ int main()
 		kanjiVocabIndex[i] = offset;
 		for(BYTE n = 0; n < kanjiVocabCount[i]; n++)
 			kanjiVocabLines[offset+n] = nVocab-1 - tmp4[128*i+kanjiVocabCount[i]-1-n];
+//			kanjiVocabLines[offset+n] = tmp4[128*i+n];
 //		memcpy(&kanjiVocabLines[offset], &tmp4[128*i], kanjiVocabCount[i]*sizeof(u16));
 		offset += kanjiVocabCount[i];
 	}
@@ -303,48 +307,53 @@ int main()
 		levelVocab.zero();
 		levelKana.zero();
 	//	file("kanji.stats").read(levelKanji.data, levelKanji.length*sizeof(BYTE));
-		file("vocab.stats").read(levelVocab.data, levelVocab.length*sizeof(BYTE));
-		file("kana.stats").read (levelKana.data,  levelKana.length*sizeof(BYTE));
-		vec<u16>	stats(file("kanji.stats"));
-
-	//----
-	//	compatibility to v1.1
-		if(stats.length == 1021)
+		file vStats("vocab.stats");
+		file kStats("kana.stats");
+		file jStats("kanji.stats");
+		if(vStats)
+			vStats.read(levelVocab.data, levelVocab.length*sizeof(BYTE));
+		if(kStats)
+			kStats.read(levelKana.data,  levelKana.length*sizeof(BYTE));
+		if(jStats)
 		{
-			const BYTE *level = (BYTE*)&stats[0];
-			for(int i = 0, j = 0; i < nKanji && j < 2042; i++)
+			vec<u16>	stats(jStats);
+
+		//----
+		//	compatibility to v1.1
+			if(stats.length == 1021)
 			{
-				const char *nl = advance(kanjiPointer[i],'\n');
-				if(nl[-3] != '.')
+				const BYTE *level = (BYTE*)&stats[0];
+				for(int i = 0, j = 0; i < nKanji && j < 2042; i++)
 				{
-					levelKanji[i] = level[j++];
-//					count2++;
+					const char *nl = advance(kanjiPointer[i],'\n');
+					if(nl[-3] != '.')
+					{
+						levelKanji[i] = level[j++];
+	//					count2++;
+					}
 				}
 			}
-		}
-		else
-		{
-		//----
-		//	compare unicode codepoints
-			for(int i = 0; i < nKanji; i++)
-			for(size_t j = 0; j < stats.length/2; j++)
-				if(kanjiUnicode[i] == stats[j*2])
-				{
-					levelKanji[i] = stats[j*2+1];
-					break;
-				}
-//			memcpy(&levelKanji[0], &tmpKanji[0], min(levelKanji.length,tmpKanji.length));
+			else
+			{
+			//----
+			//	compare unicode codepoints
+				for(int i = 0; i < nKanji; i++)
+				for(size_t j = 0; j < stats.length/2; j++)
+					if(kanjiUnicode[i] == stats[j*2])
+					{
+						levelKanji[i] = stats[j*2+1];
+						break;
+					}
+	//			memcpy(&levelKanji[0], &tmpKanji[0], min(levelKanji.length,tmpKanji.length));
+			}
 		}
 	}
 
 //----
-//	Font font1("fonts/meiryo.ttc");
-//	Font font1("fonts/ipagui.ttf", 42);
 	Font font1("fonts/ipaexg.ttf", 42);
+//	Font font1("fonts/meiryo.ttc", 42);
 	Font font2("fonts/ipam.ttf", 42);
-//	Font font2("fonts/Cyberbit.ttf", 42);
-//	Font font2("fonts/mingliu.ttc", 42);
-//	Font font2("fonts/HanaMinA.ttf", 42);
+//	Font font2("fonts/simsun.ttc", 42);
 	Font font3("fonts/kaiu.ttf", 42);
 
 //----
@@ -517,10 +526,12 @@ int main()
 
 			if(currMode == 0)
 			{
-				if(pressed & PSP_CTRL_RIGHT)	testLimit = min(testLimit+ 10, limit);
-				if(pressed & PSP_CTRL_LEFT)	testLimit = max(testLimit- 10, autoLimit ? autoLimit : 12);
+//				if(pressed & PSP_CTRL_RIGHT)	testLimit = min(testLimit+ 10, limit);
+//				if(pressed & PSP_CTRL_LEFT)	testLimit = max(testLimit- 10, autoLimit ? autoLimit : 20);
+				if(pressed & PSP_CTRL_RIGHT)	repetition= min(repetition+ 1, 20);
+				if(pressed & PSP_CTRL_LEFT)	repetition= max(repetition- 1,  1);
 				if(pressed & PSP_CTRL_UP)		testLimit = min(testLimit+100, limit);
-				if(pressed & PSP_CTRL_DOWN)	testLimit = max(testLimit-100, autoLimit ? autoLimit : 12);
+				if(pressed & PSP_CTRL_DOWN)	testLimit = max(testLimit-100, autoLimit ? autoLimit : 20);
 			}
 
 		//----
@@ -865,6 +876,7 @@ int main()
 			{
 			// font2 doesn't support some radical components
 				Font &fnt = font == &font2? font1 : *font;
+//				Font &fnt = *font;
 
 			//	Draw kanji + components
 				const char *s = kanjiPointer[select];
@@ -984,21 +996,22 @@ FOUND_RADIKAL:
 								rad = atoi(stats);
 								((char*)s)[-1] = '	';
 							}
-
-								font1.color = 0x55FFFFFF;	font1.setSize(11);
-								font1.print(framebuffer,   8.0f, 14.0f, "radical");
-								font1.print(framebuffer, 130.0f, 14.0f, "strokes",  0x0);
-								font1.print(framebuffer, 218.0f, 14.0f, "freq",     0x0);
-								font1.print(framebuffer, 318.0f, 14.0f, "grade",    0x0);
-								font1.print(framebuffer, 408.0f, 14.0f, "JLPT",     0x0);
-								font1.color = 0xAAFFFFFF;	font1.setSize(16);
-								font1.print(framebuffer,  50.0f, 16.0f, UNICODE_RADICALS+rad-1);
-								font1.print(framebuffer,  72.0f, 16.0f, stats,    '	');
-							s=	font1.print(framebuffer, 171.0f, 16.0f, s,         '	');
-							s=	font1.print(framebuffer, 244.0f, 16.0f, s,         '	');
-							s=	font1.print(framebuffer, 352.0f, 16.0f, s,         '	');
-							s=	font1.print(framebuffer, 437.0f, 16.0f, s,         '	');
-								font1.color = WHITE;
+							Font &f = font1;
+						//	Font &f = font2;
+								f.color = 0x55FFFFFF;	f.setSize(11);
+								f.print(framebuffer,   8.0f, 14.0f, "radical");
+								f.print(framebuffer, 130.0f, 14.0f, "strokes",  0x0);
+								f.print(framebuffer, 218.0f, 14.0f, "freq",     0x0);
+								f.print(framebuffer, 318.0f, 14.0f, "grade",    0x0);
+								f.print(framebuffer, 408.0f, 14.0f, "JLPT",     0x0);
+								f.color = 0xAAFFFFFF;	f.setSize(16);
+								f.print(framebuffer,  50.0f, 16.0f, UNICODE_RADICALS+rad-1);
+								f.print(framebuffer,  72.0f, 16.0f, stats,    '	');
+							s=	f.print(framebuffer, 171.0f, 16.0f, s,         '	');
+							s=	f.print(framebuffer, 244.0f, 16.0f, s,         '	');
+							s=	f.print(framebuffer, 352.0f, 16.0f, s,         '	');
+							s=	f.print(framebuffer, 437.0f, 16.0f, s,         '	');
+								f.color = WHITE;
 						}
 						font1.color = phon ? 0xFF80D9AE : WHITE;
 						if(on)							font1.print(framebuffer,  68.0f, y,       on,      '	', 18, -2.0f);
@@ -1060,11 +1073,14 @@ FOUND_RADIKAL:
 		//	We're doing it now, to not slow things down
 			u32 sum = 0;
 			for(size_t i = 0; i < level.length; i++)
-				sum += level[i];
+	//			sum += level[i];
+				if(level[i] >= 128)
+					sum++;
 
 		//----
 		// Each kanji with a rating of 155 (=5.0s reaction time) unlocks a new kanji
-			autoLimit = min(int(20.0 + 0.006465574372532171 * sum), limit);
+			autoLimit = sum + 20;
+//			autoLimit = min(int(20.0 + 0.006465574372532171 * sum), limit);
 			int newLimit = max(testLimit, autoLimit);
 			if(testLimit && ((newLimit)/10) > ((testLimit)/10))
 				currMode = 100;
@@ -1101,7 +1117,8 @@ FOUND_RADIKAL:
 				while(q0 < 0 || q0 == q1)
 				{
 					int i = rand(testLimit);
-					if(randSquared() < 255 - level[i])
+//					if(randSquared()*randSquared() < 255 - level[i])
+					if(ProbLevel(level[i]) > randd())
 						q0 = i;
 				}
 
@@ -1111,13 +1128,21 @@ FOUND_RADIKAL:
 			void *currBuffer = (void*) (framebuffer ? 0x0 : 0x88000);
 
 		//----
-			if(switchedTestMode || (pressed & (PSP_CTRL_UP|PSP_CTRL_RIGHT|PSP_CTRL_DOWN|PSP_CTRL_LEFT)))
+			if(switchedTestMode || (pressed & (PSP_CTRL_UP|PSP_CTRL_DOWN)))
 			{
 				sprintf((char*)SCRATCHPAD, "Learning %s :  %i / %i", testMode==0 ? "Kanji" : testMode==1 ? "Vocabulary" : "Hiragana & Katakana", testLimit, limit);
 				font1.setSize(21);
 				font1.color = testMode==0 ? 0xFFFF8766 : testMode==1 ?  0xFF5FCC20 : 0xFF549BFF;
 				font1.print(currBuffer, 5.0f, 265.0f, (char*)SCRATCHPAD);
 				font1.color = WHITE;
+			}
+		//----
+			if(pressed & (PSP_CTRL_LEFT|PSP_CTRL_RIGHT))
+			{
+				sprintf((char*)SCRATCHPAD, "Repetition :  %i", repetition);
+				font1.setSize(21);
+				font1.color = WHITE;
+				font1.print(currBuffer, 5.0f, 265.0f, (char*)SCRATCHPAD);
 			}
 
 		//----

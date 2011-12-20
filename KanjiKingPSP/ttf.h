@@ -37,10 +37,16 @@ public:
 	}
 
 //+------------------------------------------------------------------+
+	operator bool()
+	{
+		return id > 0;
+	}
+
+//+------------------------------------------------------------------+
 //	Returns the file length in bytes. Warning: seeks to the end.
 	SceOff length() const
 	{
-		return sceIoLseek(id, 0, SEEK_END);
+		return id > 0 ? sceIoLseek(id, 0, SEEK_END) : 0;
 	}
 
 //+------------------------------------------------------------------+
@@ -48,6 +54,8 @@ public:
 //	@return The number of bytes read
 	int read(void *data, SceSize size, SceOff start = 0) const
 	{
+		if(id <= 0)
+			return 0;
 		sceIoLseek(id, start, SEEK_SET);
 		return sceIoRead(id, data, size);
 	}
@@ -57,7 +65,7 @@ public:
 //	@return The number of bytes written
 	int write(void *data, SceSize size)
 	{
-		return sceIoWrite(id, data, size);
+		return id > 0 ? sceIoWrite(id, data, size) : 0;
 	}
 
 };

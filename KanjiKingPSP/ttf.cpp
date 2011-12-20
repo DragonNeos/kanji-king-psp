@@ -138,6 +138,7 @@ FT_Error Font::print(void *framebuffer, float x, float y, u32 codepoint)
 	if(charIndex == 0)
 		charIndex = FT_Get_Char_Index(face, '?');
 
+
 	err = FT_Load_Glyph(face, charIndex, FT_LOAD_RENDER);
 //	err = FT_Load_Glyph(face, charIndex, FT_LOAD_DEFAULT);
 
@@ -164,8 +165,12 @@ FT_Error Font::print(void *framebuffer, float x, float y, u32 codepoint)
 	for(int j = 0; j < h; j++)
 	for(int i = 0; i < w; i++)
 	{
-		BYTE src = bmp.buffer[j*bmp.pitch + i];
-	
+		BYTE src	= bmp.buffer[j*bmp.pitch + i];
+//		BYTE R	= bmp.buffer[j*bmp.pitch + 3*i];
+//		BYTE G	= bmp.buffer[j*bmp.pitch + 3*i+1];
+//		BYTE B	= bmp.buffer[j*bmp.pitch + 3*i+2];
+//		int  src	= int(R) + int(G) + int(B);
+
 	// skip fully transparent pixel
 		if(src)
 		{
@@ -178,6 +183,7 @@ FT_Error Font::print(void *framebuffer, float x, float y, u32 codepoint)
 			u32 *dst = buf + pixY*BUF_WIDTH + pixX;
 
 			Blend(dst, color, BYTE_TO_FLOAT * src);
+//			*dst = (R) | (G << 8) | (B << 16);
 		}
 	}
 
