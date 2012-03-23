@@ -45,12 +45,14 @@
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <NMakeBuildCommandLine>vsmake &amp;&amp; copy EBOOT.PBP "G:\PSP\GAME\KanjiKingPSP\"</NMakeBuildCommandLine>
+    <NMakeBuildCommandLine>vsmake &amp;&amp; copy EBOOT.PBP "H:\PSP\GAME\KanjiKingPSP\"</NMakeBuildCommandLine>
     <NMakeOutput>EBOOT.PBP</NMakeOutput>
     <NMakeCleanCommandLine>vsmake clean</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>vsmake clean &amp;&amp; vsmake &amp;&amp; copy EBOOT.PBP "G:\PSP\GAME\KanjiKingPSP\"</NMakeReBuildCommandLine>
+    <NMakeReBuildCommandLine>vsmake clean &amp;&amp; vsmake &amp;&amp; copy EBOOT.PBP "H:\PSP\GAME\KanjiKingPSP\"</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeIncludeSearchPath>X:\PSP\pspsdk\include;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <IncludePath>X:\PSP\pspsdk\psp\sdk\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>

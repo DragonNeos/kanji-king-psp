@@ -395,7 +395,8 @@ int main()
 				q1				= -1;				// previous kanji or vocab index = answer
 	BYTE		prevLevel	= 0;				// To restore the level after a mistaken answer
 	bool		german		= false,			// Which language to use for translations: english or german?
-				correct		= false;			// if q1 was answered correctly
+				correct		= false,			// if q1 was answered correctly
+				autoPlay		= false;			// cycle kanji without user input?
 	Font		*font			= &font1;
 	u16		q1Kanji[8],						// unicode codepoints of kanji in q1
 				q1KanjiCount= 0;
@@ -427,19 +428,25 @@ int main()
 		if(pressed & PSP_CTRL_UP)			cursor-=1;
 		if(pressed & PSP_CTRL_RIGHT)		cursor+=7;
 		if(pressed & PSP_CTRL_LEFT)		cursor-=7;
-		if(currMode == 0
-		&&	pressed & PSP_CTRL_SELECT)
+		if(pressed & PSP_CTRL_SELECT)
 		{
-			testMode++;
-			if(testMode > 2)
-				testMode = 0;
+			switch(currMode)
+			{
+			case 0:
+				testMode++;
+				if(testMode > 2)
+					testMode = 0;
+			break;
+			case 1:
+				currMode = 5;
+				pressed = 0;
+			break;
+			case 3:
+				autoPlay = !autoPlay;
+			break;
+			}
 		}
-		if(currMode == 1
-		&&	pressed & PSP_CTRL_SELECT)
-		{
-			currMode = 5;
-			pressed = 0;
-		}
+
 		if(currMode == 1
 		||	currMode == 3)						select += cursor - prevCursor;
 		if(pressed & PSP_CTRL_RTRIGGER)	german = !german;
@@ -453,6 +460,9 @@ int main()
 			{
 			case 0:	currMode = 3;
 						cycleIdx = 0;	break;
+			case 3:	if(testMode == 0)
+							currMode = 0;
+		//	falls through
 			default:	cycleIdx++;		break;
 			}
 		}
@@ -504,6 +514,30 @@ int main()
 			currMode = 0;
 			q0 =
 			q1 = -1;
+		}
+
+	//----
+		if(currMode!=3)
+			autoPlay = false;
+		if(autoPlay)
+		{
+		//----
+		//	Select new kanji
+			sceRtcGetCurrentTick(&tick2);
+			const double s = TickToSeconds * (tick2 - tick1);
+			if(s >= 6.0)
+			{
+				tick1 = tick2;
+				int k = select;
+				while(k == select)
+				{
+					int i = rand(testLimit);
+					if(ProbLevel(level[i]) > randd())
+						k = i;
+				}
+				select = k;
+				pressed = 0x4000000;			// not a button, just to enter the drawing routine
+			}
 		}
 
 	//----
@@ -875,8 +909,14 @@ int main()
 			if(currMode == 3)
 			{
 			// font2 doesn't support some radical components
-				Font &fnt = font == &font2? font1 : *font;
-//				Font &fnt = *font;
+//				Font &fnt = font == &font2? font1 : *font;
+				Font &fnt = *font;
+
+				if(autoPlay)
+				{
+					font1.setSize(14);
+					font1.print(framebuffer, 425.0f, 265.0f, 0x25B7);	//	'>'
+				}
 
 			//	Draw kanji + components
 				const char *s = kanjiPointer[select];
@@ -1071,15 +1111,19 @@ FOUND_RADIKAL:
 		//----
 		//	Update testLimit
 		//	We're doing it now, to not slow things down
-			u32 sum = 0;
+			u32 sumA = 0;
+			double sumB = 0;
 			for(size_t i = 0; i < level.length; i++)
+			{
 	//			sum += level[i];
 				if(level[i] >= 128)
-					sum++;
+					sumA++;
+				sumB += 0.00392156862745098 * level[i];
+			}
 
 		//----
 		// Each kanji with a rating of 155 (=5.0s reaction time) unlocks a new kanji
-			autoLimit = sum + 20;
+			autoLimit = sumA + sumB/12.0 + 20;
 //			autoLimit = min(int(20.0 + 0.006465574372532171 * sum), limit);
 			int newLimit = max(testLimit, autoLimit);
 			if(testLimit && ((newLimit)/10) > ((testLimit)/10))
