@@ -1402,8 +1402,8 @@ FOUND_RADIKAL:
 		//	save kanji level
 			for(int i = 0; i < nKanji; i++)
 			{
-				stats[6+i*2]   = kanjiUnicode[i];
-				stats[6+i*2+1] = levelKanji[i];
+				stats[12+i*2]   = kanjiUnicode[i];
+				stats[12+i*2+1] = levelKanji[i];
 			}
 								file("kanji.stats",	PSP_O_CREAT|PSP_O_WRONLY).write(stats.data,			stats.length*sizeof(u16));
 		}
