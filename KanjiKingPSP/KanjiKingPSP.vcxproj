@@ -51,7 +51,7 @@
     <NMakeReBuildCommandLine>vsmake clean &amp;&amp; vsmake &amp;&amp; copy EBOOT.PBP "H:\PSP\GAME\KanjiKingPSP\"</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeIncludeSearchPath>X:\PSP\pspsdk\include;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
-    <IncludePath>X:\PSP\pspsdk\psp\sdk\include;$(IncludePath)</IncludePath>
+    <IncludePath>X:\PSP\pspsdk\psp\sdk\include;X:\PSP\pspsdk\psp\include\freetype2;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>

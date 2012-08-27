@@ -3,8 +3,6 @@
 #include <pspkernel.h>
 
 #include <ft2build.h>
-//#include FT_FREETYPE_H
-//#include FT_GLYPH_H
 #include <freetype/freetype.h>
 #include <freetype/ftglyph.h>
 
@@ -203,7 +201,25 @@ public:
 	u32 color;
 
 //+------------------------------------------------------------------+
-	Font(const char *filename, int size = 0) : color(WHITE)
+	Font(const char *filename, int size = 18) : color(WHITE)
+	{
+		open(filename, size);
+	}
+
+//+------------------------------------------------------------------+
+	~Font()
+	{
+		close();
+	}
+
+//+------------------------------------------------------------------+
+	void close()
+	{
+		FT_Done_Face(face);
+	}
+
+//+------------------------------------------------------------------+
+	void open(const char *filename, int size = 18)
 	{
 		FT_New_Face(FTLib, filename, 0, &face);
 
@@ -212,16 +228,17 @@ public:
 	}
 
 //+------------------------------------------------------------------+
-	~Font()
-	{
-		FT_Done_Face(face);
-	}
-
-//+------------------------------------------------------------------+
 //	Sets face->size->metrics.y_scale
 	FT_Error setSize(int pt)
 	{
 		return FT_Set_Char_Size(face, pt*64, 0, 0, 0);
+	}
+
+//+------------------------------------------------------------------+
+//	Returns the character index, or 0 if the char is not found.
+	FT_UInt findChar(u32 codepoint) const
+	{
+		return FT_Get_Char_Index(face, codepoint);
 	}
 
 //+------------------------------------------------------------------+

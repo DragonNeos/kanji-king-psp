@@ -1,37 +1,19 @@
-/*
- * fonttest.c
- * This file is used to display the PSP's internal font (pgf and bwfon firmware files)
- * intraFont Version 0.31 by BenHur - http://www.psp-programming.com/benhur
- *
- * Uses parts of pgeFont by InsertWittyName - http://insomniac.0x89.org
- *
- * This work is licensed under the Creative Commons Attribution-Share Alike 3.0 License.
- * See LICENSE for more details.
- *
- */
-
 #include <pspkernel.h>
-//#include <stdio.h>
-//#include <string.h>
 #include <pspgu.h>
-#include <pspgum.h>
 #include <pspdisplay.h>
-//#include <time.h>     //only needed for the blinking effect
-//#include <pspdebug.h> //only needed for indicating loading progress
-
-//#include <oslib/intraFont/intraFont.h>
-
 #include <pspctrl.h>
 #include <psprtc.h>
-
-#include <math.h>
+#include <pspmoduleinfo.h>
+#include <psppower.h>
 
 #include "ttf.h"
 #include "SimpleRNG.h"
 
-PSP_MODULE_INFO("Kanji King", PSP_MODULE_USER, 1, 3);
+PSP_MODULE_INFO("Kanji King", PSP_MODULE_USER, 1, 4);
 
-static int running = 1;
+static bool running = true;
+static bool suspend = false;
+
 static unsigned int __attribute__((aligned(16))) list[262144];
 
 int exit_callback(int arg1, int arg2, void *common) {
@@ -39,19 +21,55 @@ int exit_callback(int arg1, int arg2, void *common) {
 	return 0;
 }
 
-int CallbackThread(SceSize args, void *argp) {
-	int cbid = sceKernelCreateCallback("Exit Callback", exit_callback, NULL);
-	sceKernelRegisterExitCallback(cbid);
-	sceKernelSleepThreadCB();
-	return 0;
+
+//-------------------------------------------------------------------------------------------------
+int power_callback(int unknown, int pwrflags, void *common)
+{
+    /* check for power switch and suspending as one is manual and the other automatic */
+    if (pwrflags & PSP_POWER_CB_POWER_SWITCH || pwrflags & PSP_POWER_CB_SUSPENDING) {
+	// suspending
+		  suspend = true;
+    } else if (pwrflags & PSP_POWER_CB_RESUMING) {
+	// resuming from suspend mode
+	 } else if (pwrflags & PSP_POWER_CB_RESUME_COMPLETE) {
+	// resume complete
+		  suspend = false;
+    } else if (pwrflags & PSP_POWER_CB_STANDBY) {
+	// entering standby mode
+    } else {
+	// Unhandled power event
+    }
+//    sceDisplayWaitVblankStart();
+
+        return 0;
 }
 
-int SetupCallbacks(void) {
-	int thid = sceKernelCreateThread("CallbackThread", CallbackThread, 0x11, 0xFA0, PSP_THREAD_ATTR_USER, 0);
-	if (thid >= 0) sceKernelStartThread(thid, 0, 0);
-	return thid;
+/* Callback thread */
+int CallbackThread(SceSize args, void *argp)
+{
+    int cbid;
+    cbid = sceKernelCreateCallback("Exit Callback", exit_callback, NULL);
+    sceKernelRegisterExitCallback(cbid);
+    cbid = sceKernelCreateCallback("Power Callback", power_callback, NULL);
+    scePowerRegisterCallback(0, cbid);
+    sceKernelSleepThreadCB();
+
+        return 0;
 }
 
+/* Sets up the callback thread and returns its thread id */
+int SetupCallbacks(void)
+{
+    int thid = 0;
+    thid = sceKernelCreateThread("update_thread", CallbackThread, 0x11, 0xFA0, 0, 0);
+    if (thid >= 0)
+        sceKernelStartThread(thid, 0, 0);
+    return thid;
+}
+
+
+
+//-------------------------------------------------------------------------------------------------
 #define	UNICODE_RAD_SUPP	0x2E80		// first codepoint of CJK Radicals Supplement
 #define	UNICODE_RADICALS	0x2F00		// first codepoint of 214 Kangxi Radicals
 #define	UNICODE_CJK			0x4E00		// first codepoint of CJK Unified Ideographs
@@ -62,8 +80,6 @@ SimpleRNG rng;
 //	@return random number in [0,1)
 inline double randd()
 {
-//	static const double f = 1.0 / double(RAND_MAX+1);
-//	return 4.656612873077392578125e-10 * rand();
 	return rng.rand();
 }
 
@@ -101,21 +117,84 @@ const char *advance(const char *ptr, char delimiter = '	', int n = 1)
 //-------------------------------------------------------------------------------------------------
 u32 ColorLevel(BYTE b)
 {
-	const int	L = 2 * int(b);
+/*	const int	L = 2 * int(b);
 	const BYTE	R = min(255, 510 - L),
 					G = min(255, L),
 					B = 0x0F;
+*/
+	float	rgb[3],
+//			hue = 2.0f/3.0f * BYTE_TO_FLOAT * b;
+			hue = 0.5 * BYTE_TO_FLOAT * b;
+	hue += 5.0f/6.0f;
+//	hue += 0.75f;
+	if(hue >  1.0f)
+		hue -= 1.0f;
+
+	HSVtoRGB(hue, 1.0, 1.0, rgb);
+
+	const BYTE	R = 255.0f*rgb[0],
+					G = 255.0f*rgb[1],
+					B = 255.0f*rgb[2];
+
 	return 0xFF000000 | (B<<16) | (G<<8) | R;
 }
 
-int repetition = 1;
+//-------------------------------------------------------------------------------------------------
+int repetition = 5;
+
+float ProbTable[256];
+
+void UpdateProbTable()
+{
+	repetition = min(max(repetition,1),10);
+
+	const float y = exp((10-repetition)/3.0f - 1.0f);
+
+	for(int i = 0; i < 256; i++)
+		ProbTable[i] = pow(1.0f - float(i)/255.0f, y);
+}
+/*
 double ProbLevel(BYTE b)
 {
-	const double r = repetition * repetition;
+//	double rep_num = exp(repetition);
+// b				= [0,255]
+// repetition	= [1,10]
+	double d = double(b);
 //	return 0.00390625 * (257.0 / (1.0 + double(b)) - 1.0);
-	return r / (r + double(b));
 //	return 0.00390625 * (256 - int(b));
+	return rep_num / (rep_num + d*d);
 }
+*/
+
+//-------------------------------------------------------------------------------------------------
+u16	tmpKanji[8],							// unicode codepoints of all kanji in a string
+		tmpKanjiCount = 0;
+
+void CacheKanji(const char *str, const u16 *filter = NULL, int filterCount = 0)
+{
+	UTF8 utf8;
+	u32 codepoint;
+	tmpKanjiCount = 0;
+
+	while((codepoint = utf8.decode(&str)) && tmpKanjiCount < 8)
+		if(codepoint == '	')
+			break;
+		else
+		if(codepoint >= UNICODE_CJK 		// Is Kanji?
+		&&	codepoint <= 0x0000FFFF)
+		{
+			if(filter==NULL)
+					tmpKanji[tmpKanjiCount++] = codepoint;
+			else
+				for(int i = 0; i < filterCount; i++)
+					if(filter[i]==codepoint)
+					{
+						tmpKanji[tmpKanjiCount++] = codepoint;
+						break;
+					}		
+		}
+}
+
 
 //-------------------------------------------------------------------------------------------------
 int main()
@@ -123,20 +202,24 @@ int main()
 	u64 tick1, tick2;
 	const double TickToSeconds = 1.0 / sceRtcGetTickResolution();
 	sceRtcGetCurrentTick(&tick1);
-//	srand((unsigned)last_tick);
+	UpdateProbTable();
 
-//----
 	SetupCallbacks();
 
 	SceCtrlData pad_data;
 	sceCtrlSetSamplingCycle(0);
 	sceCtrlSetSamplingMode(1);
 
+//----
+//	toggle power locking
+	scePowerLock(0);
+
+//----
 	FT_Init_FreeType(&FTLib);
 
 //----
 //	Load resources
-	const string	heisig(file("data/heisig.txt")),				// kanji+components	english	german	heisigIndex
+	const string	heisig(file("data/kanji.txt")),				// kanji+components	english	german
 						radikale(file("data/radikale.txt")),		// 214 radicals with german meanings
 						kanjidic(file("data/kanjidic.txt")),		// 214 radicals + >12000 kanji (all <= 0xFFFF)
 						vocab(file("data/vocab.txt")),
@@ -147,15 +230,14 @@ int main()
 		sceKernelExitGame();
 
 	int		nKanji		= 0,				// # heisig kanji
-//				nTest			= 0,
 				nVocab		= 0,				// # vocab lines (= items)
 				nKana			= 0,				// # kana lines
 				testLimitK	= 0,				// Kanji with this or higher indices are not tested
 				testLimitV	= 0,				// Vocab ...
 				testLimitA	= 0,				// Kana  ...
 				autoLimit	= 0,				// automatically determined minimum test limit
-				select		= 0,				// 3rd (=middle) kanji displayed in list mode
-				prevSelect	= -1,
+				select		= -1,				// 3rd (=middle) kanji displayed in list mode
+				listSelect	= -1,				// index of the vocab list
 				nKanjidic	= 0,				// # kanjidic lines (= kanji)
 				cursor		= 0,				// Selected item, when scrolling through stuff
 				prevCursor	= 0,
@@ -184,7 +266,6 @@ int main()
 
 //	Copy tmp pointers to proper vector
 	const vec<const char*>	kanjiPointer(nKanji, tmp1);
-//	const vec<const char*>	compoPointer(nKanji, tmp2);
 			vec<const char*>	radikPointer(214);
 	const vec<u16>				kanjiUnicode(nKanji, tmp3);
 			vec<u16>				kanjiDicLink(nKanji);				// heisig kanji index -> kanjidic line
@@ -247,8 +328,6 @@ int main()
 		kanjiVocabIndex[i] = offset;
 		for(BYTE n = 0; n < kanjiVocabCount[i]; n++)
 			kanjiVocabLines[offset+n] = nVocab-1 - tmp4[128*i+kanjiVocabCount[i]-1-n];
-//			kanjiVocabLines[offset+n] = tmp4[128*i+n];
-//		memcpy(&kanjiVocabLines[offset], &tmp4[128*i], kanjiVocabCount[i]*sizeof(u16));
 		offset += kanjiVocabCount[i];
 	}
 
@@ -271,16 +350,10 @@ int main()
 	{
 		u16	code = kanjiUnicode[i];
 		int	link = 0;
-//		bool	found = false;
 		for(; link < nKanjidic; link++)
 			if(code == tmp4[link])
-			{
-//				found = true;
 				break;
-			}
 
-//		if(!found)
-//			nTest = i;
 		kanjiDicLink[i] = link;
 	}
 
@@ -296,17 +369,54 @@ int main()
 //	Copy tmp pointers to proper vector
 	const vec<const char*>	kanaPointer(nKana, tmp1);
 
+//----
+	const int nFonts = 6;
+	const char *fNames[nFonts] = {"fonts/meiryo.ttc",
+											"fonts/ipam.ttf",
+											"fonts/epmarugo.ttf",
+											"fonts/kaiu.ttf",
+											"fonts/epgyosho.ttf",
+											"fonts/KanjiStrokeOrders_v3.000.ttf"};
+
+//	Font font1("fonts/ipaexg.ttf", 42);
+	Font font1(fNames[0]);
+	Font font2(fNames[1]);
+	Font font3(fNames[2]);
+	Font font4(fNames[3]);
+	Font font5(fNames[4]);
+	Font font6(fNames[5]);
+	Font *fonts[nFonts] = {&font1, &font2, &font3, &font4, &font5, &font6};
+	int selectedFont = 0;
+
+//----
+//	Game state and logic
+	unsigned	currButtons	= 0,
+				prevButtons	= 0,
+				pressed		= 0,				// just pressed buttons
+				released		= 0,				// just released buttons
+				prevPressed	= 0,
+				repeatPress	= 0;				// was the same button pressed repeatedly?
+	int		currMode		= -1,				// current "screen" - determines what is displayed and how buttons work
+				prevMode		= 0,				// still displayed previous frame
+				testMode		= 0,				// what is being tested: kanji or vocab or kana?
+				prevTestMode= 0,
+				q0				= -1,				// current  kanji or vocab index = question
+				q1				= -1;				// previous kanji or vocab index = answer
+	BYTE		prevLevel	= 0;				// To restore the level after a mistaken answer
+	bool		german		= false,			// Which language to use for translations: english or german?
+				correct		= false,			// if q1 was answered correctly
+				autoPlay		= false;			// cycle kanji without user input?
+	bool		modeUsed[3]	= {false,false,false};
+
 	vec<BYTE>	levelKanji(nKanji),
 					levelVocab(nVocab),
 					levelKana(nKana);
 //----
 //	Load progress
-//	int count2 = 0;
 	{
 		levelKanji.zero();
 		levelVocab.zero();
 		levelKana.zero();
-	//	file("kanji.stats").read(levelKanji.data, levelKanji.length*sizeof(BYTE));
 		file vStats("vocab.stats");
 		file kStats("kana.stats");
 		file jStats("kanji.stats");
@@ -319,42 +429,25 @@ int main()
 			vec<u16>	stats(jStats);
 
 		//----
-		//	compatibility to v1.1
-			if(stats.length == 1021)
-			{
-				const BYTE *level = (BYTE*)&stats[0];
-				for(int i = 0, j = 0; i < nKanji && j < 2042; i++)
+		//	load language and font options
+			if(stats[0]=='g')	{	german			= stats[1];								}
+			if(stats[2]=='r')	{	repetition		= stats[3];	UpdateProbTable();	}
+			if(stats[4]=='f')	{	selectedFont	= stats[5];								}
+			if(stats[6]=='1')	{	testLimitK		= stats[7];								}
+			if(stats[8]=='2')	{	testLimitV		= stats[9];								}
+			if(stats[10]=='3'){	testLimitA		= stats[11];							}
+
+		//----
+		//	compare unicode codepoints
+			for(int i = 0; i < nKanji; i++)
+			for(size_t j = 0; j < stats.length/2; j++)
+				if(kanjiUnicode[i] == stats[j*2])
 				{
-					const char *nl = advance(kanjiPointer[i],'\n');
-					if(nl[-3] != '.')
-					{
-						levelKanji[i] = level[j++];
-	//					count2++;
-					}
+					levelKanji[i] = stats[j*2+1];
+					break;
 				}
-			}
-			else
-			{
-			//----
-			//	compare unicode codepoints
-				for(int i = 0; i < nKanji; i++)
-				for(size_t j = 0; j < stats.length/2; j++)
-					if(kanjiUnicode[i] == stats[j*2])
-					{
-						levelKanji[i] = stats[j*2+1];
-						break;
-					}
-	//			memcpy(&levelKanji[0], &tmpKanji[0], min(levelKanji.length,tmpKanji.length));
-			}
 		}
 	}
-
-//----
-	Font font1("fonts/ipaexg.ttf", 42);
-//	Font font1("fonts/meiryo.ttc", 42);
-	Font font2("fonts/ipam.ttf", 42);
-//	Font font2("fonts/simsun.ttc", 42);
-	Font font3("fonts/kaiu.ttf", 42);
 
 //----
 //	Seed RNG
@@ -382,39 +475,48 @@ int main()
 	sceGuDisplay(GU_TRUE);
 
 //----
-//	Games state and logic
-	unsigned	currButtons	= 0,
-				prevButtons	= 0,
-				pressed		= 0,				// just pressed buttons
-				realeased	= 0;				// just released buttons
-	int		currMode		= -1,				// current "screen" - determines what is displayed and how buttons work
-				prevMode		= 0,				// still displayed previous frame
-				testMode		= 0,				// what is being tested: kanji or vocab or kana?
-				prevTestMode= 0,
-				q0				= -1,				// current  kanji or vocab index = question
-				q1				= -1;				// previous kanji or vocab index = answer
-	BYTE		prevLevel	= 0;				// To restore the level after a mistaken answer
-	bool		german		= false,			// Which language to use for translations: english or german?
-				correct		= false,			// if q1 was answered correctly
-				autoPlay		= false;			// cycle kanji without user input?
-	Font		*font			= &font1;
-	u16		q1Kanji[8],						// unicode codepoints of kanji in q1
-				q1KanjiCount= 0;
-	bool		modeUsed[3]	= {false,false,false};
-//	bool		switchedTestMode = false;
-
-//----
 	while(running)
 	{
+		if(suspend)
+		{
+		//	Close the fonts (files)
+			for(int i = 0; i < nFonts; i++)
+				fonts[i]->close();
+
+			scePowerUnlock(0);
+
+			while(suspend)
+				sceDisplayWaitVblankStart();
+
+			scePowerLock(0);
+
+		//	Reopen the fonts (files)
+			for(int i = 0; i < nFonts; i++)
+				fonts[i]->open(fNames[i]);
+
+		// reset question
+			if(currMode == 0)
+				currMode = -1;
+		}
+
 	//----
 	//	Input
 		sceCtrlReadBufferPositive(&pad_data, 1);
 
 		currButtons = pad_data.Buttons;
 		unsigned
-		changed		= currButtons ^ prevButtons;			// buttons that were either pressed or released
-		pressed		= currButtons & changed;				// buttons that were just pressed
-		realeased	= prevButtons & changed;				// buttons that were just released
+		changed		= currButtons ^ prevButtons;		// buttons that were either pressed or released
+		pressed		= currButtons & changed;			// buttons that were just pressed
+		released		= prevButtons & changed;			// buttons that were just released
+
+		if(pressed)
+		{
+			if(pressed==prevPressed)
+				repeatPress++;
+			else
+				repeatPress = 0;
+			prevPressed	= pressed;
+		}
 
 	//----
 		if(pressed && currMode == 100)
@@ -442,47 +544,46 @@ int main()
 				pressed = 0;
 			break;
 			case 3:
+			case 4:
 				autoPlay = !autoPlay;
 			break;
 			}
 		}
 
+		if(currMode <= 1)
+			cycleIdx = 0;
+
 		if(currMode == 1
-		||	currMode == 3)						select += cursor - prevCursor;
-		if(pressed & PSP_CTRL_RTRIGGER)	german = !german;
-		if(pressed & PSP_CTRL_TRIANGLE)	scrollIdx++;
-		if(((pressed & PSP_CTRL_CIRCLE) && currMode==2)
-		||	((pressed & PSP_CTRL_CROSS)  && currMode==3))
-			pressed |=PSP_CTRL_START;
+		||	currMode == 3
+		||	currMode == 4)													select += cursor - prevCursor;
+		if(pressed & PSP_CTRL_RTRIGGER)								german = !german;
+		if((currMode == 3 && (pressed & PSP_CTRL_SELECT))
+		||	(currMode == 4 && (pressed & PSP_CTRL_TRIANGLE)))	scrollIdx++;
+		if(currMode == 3 && (pressed & PSP_CTRL_CROSS))			cycleIdx++;
 		if(pressed & PSP_CTRL_START)
 		{
-			switch(currMode)
-			{
-			case 0:	currMode = 3;
-						cycleIdx = 0;	break;
-			case 3:	if(testMode == 0)
-							currMode = 0;
-		//	falls through
-			default:	cycleIdx++;		break;
-			}
+			if(currMode == 0)
+				currMode = 3;
+			else if(currMode==3)
+				cycleIdx++;
+			else
+				currMode = 0;
 		}
-		if(pressed & PSP_CTRL_CIRCLE)
+
+		if((pressed & PSP_CTRL_TRIANGLE) && (currMode == 1 || currMode == 2 || currMode == 3))
 		{
-			switch(currMode)
-			{
-			case 1:	currMode = 2;	break;
-			case 3:	currMode = 2;	break;
-			}
+			currMode = 4;
+			scrollIdx = 0;
 		}
-		if(pressed & PSP_CTRL_CROSS)
+		else if((pressed & PSP_CTRL_CIRCLE) && (currMode == 1 || currMode == 3 || currMode == 4))
 		{
-			switch(currMode)
-			{
-			case 1:	currMode = 3;	break;
-			case 2:	currMode = 3;	break;
-			}
+			currMode = 2;
 		}
-		if(pressed & PSP_CTRL_SQUARE)
+		else if((pressed & PSP_CTRL_CROSS) && (currMode == 1 || currMode == 2 || currMode == 4))
+		{
+			currMode = 3;
+		}
+		else if(pressed & PSP_CTRL_SQUARE)
 		{
 			switch(currMode)
 			{
@@ -490,12 +591,12 @@ int main()
 			default:	currMode = 1;	break;
 			}
 		}
+
 		if(pressed & PSP_CTRL_LTRIGGER)
-		{
-			if			(font==&font1)	font = &font2;
-			else if	(font==&font2)	font = &font3;
-			else if	(font==&font3)	font = &font1;
-		}
+			selectedFont++;
+		if(selectedFont >= nFonts-1)
+			selectedFont = 0;
+		Font *const font = fonts[selectedFont];
 
 	//----
 	//	setup references to applicable data, depending on selected mode
@@ -510,14 +611,19 @@ int main()
 	//	Changed test mode?
 		if(switchedTestMode)
 		{
-			prevMode = -1;
-			currMode = 0;
-			q0 =
-			q1 = -1;
+			prevMode	= -1;
+			currMode	= 0;
+			select	=
+			listSelect =
+			q0	=
+			q1	= -1;
 		}
 
+		if(currMode==3 && currMode!=prevMode && prevMode!=4)
+			cycleIdx = 0;
+
 	//----
-		if(currMode!=3)
+		if(currMode!=3 && currMode!=4)
 			autoPlay = false;
 		if(autoPlay)
 		{
@@ -525,18 +631,13 @@ int main()
 		//	Select new kanji
 			sceRtcGetCurrentTick(&tick2);
 			const double s = TickToSeconds * (tick2 - tick1);
-			if(s >= 6.0)
+			if(s >= 5.0)
 			{
 				tick1 = tick2;
-				int k = select;
-				while(k == select)
-				{
-					int i = rand(testLimit);
-					if(ProbLevel(level[i]) > randd())
-						k = i;
-				}
-				select = k;
-				pressed = 0x4000000;			// not a button, just to enter the drawing routine
+				if(++select == limit)
+					select = 0;
+
+				pressed |= 0x4000000;		// not a button, just to enter the drawing routine
 			}
 		}
 
@@ -550,22 +651,17 @@ int main()
 			sceGuClear(GU_COLOR_BUFFER_BIT);
 			sceGuFinish();
 
-			if(prevMode == 0)
-				prevSelect = q1;				// remember list index
-
 		//----
 		//	Kana have no vocab or components
-			if(ka && (currMode == 2 || currMode == 3))
+			if(ka && (currMode == 2 || currMode == 3 || currMode == 4))
 				currMode = 1;
 
 			if(currMode == 0)
 			{
-//				if(pressed & PSP_CTRL_RIGHT)	testLimit = min(testLimit+ 10, limit);
-//				if(pressed & PSP_CTRL_LEFT)	testLimit = max(testLimit- 10, autoLimit ? autoLimit : 20);
-				if(pressed & PSP_CTRL_RIGHT)	repetition= min(repetition+ 1, 20);
-				if(pressed & PSP_CTRL_LEFT)	repetition= max(repetition- 1,  1);
-				if(pressed & PSP_CTRL_UP)		testLimit = min(testLimit+100, limit);
-				if(pressed & PSP_CTRL_DOWN)	testLimit = max(testLimit-100, autoLimit ? autoLimit : 20);
+				if(pressed & PSP_CTRL_RIGHT)	{	repetition= min(repetition+ 1, 10);	UpdateProbTable();						}
+				if(pressed & PSP_CTRL_LEFT)	{	repetition= max(repetition- 1,  1);	UpdateProbTable();						}
+				if(pressed & PSP_CTRL_UP)		{	testLimit = min(testLimit+(1<<repeatPress), limit);							}
+				if(pressed & PSP_CTRL_DOWN)	{	testLimit = max(testLimit-(1<<repeatPress), autoLimit ? autoLimit : 20);}
 			}
 
 		//----
@@ -589,38 +685,23 @@ int main()
 			}
 
 		//----
-		//	Buffer all kanji in select
-			{
-				const bool jump = (prevMode==1 && (currMode==2||currMode==3) && v && (pressed & (PSP_CTRL_CROSS|PSP_CTRL_CIRCLE)));
-				if(jump)
-				{
-					utf8.state = 0;
-					q1KanjiCount = 0;
-	//				cursor =
-	//				scrollIdx =
-					cycleIdx = 0;
-					const char *str = src[select];
-					while((codepoint = utf8.decode(&str)))
-						if(codepoint == '	')
-							break;
-						else
-						if(codepoint >= UNICODE_CJK)		// Is Kanji?
-							q1Kanji[q1KanjiCount++] = codepoint;
-				}
+		//	Return from 'quick' mode 3 after cycling all kanji
+			if(currMode == 3 && cycleIdx >= max(tmpKanjiCount,u16(1)) && (pressed & PSP_CTRL_START))
+				currMode = 0;
 
-			//----
-			//	Jump to q1 entry or kanji
-				if(currMode)
-				if(prevMode == 0 || jump || (pressed & PSP_CTRL_START))
+		//----
+		//	Jump to q1 entry or kanji
+			if(currMode)
+			{
+				if(prevMode==0)
+					listSelect = select = (q1 >= 0 ? q1 : testLimit-4);
+
+				if(tmpKanjiCount)
 				{
-					if(!v || ka || (currMode == 1 && !jump))
+					if((v && prevMode<=1 && (currMode==2||currMode==3||currMode==4))
+					||	(currMode==3&&prevMode!=1&&prevMode!=4 && (pressed & (PSP_CTRL_START|PSP_CTRL_CROSS))))
 					{
-						if(q1 > 0)	select = q1;
-						else			select = testLimit-4;
-					}
-					else if(q1KanjiCount)
-					{
-						codepoint = q1Kanji[cycleIdx % q1KanjiCount];
+						codepoint = tmpKanji[cycleIdx % tmpKanjiCount];
 						for(int i = 0; i < nKanji; i++)
 							if(kanjiUnicode[i]==codepoint)
 							{
@@ -628,16 +709,13 @@ int main()
 								break;
 							}
 					}
-					else
+				}
+				else
+				{
+					if((v||ka) && currMode > 1 && currMode < 5)
 						currMode = prevMode;
 				}
 			}
-
-		//----
-		//	Restore old list position
-			if(currMode==1 && (prevMode==3||prevMode==2) && v)
-			if(prevSelect >= 0)
-				select = prevSelect;
 
 		//----
 		//	Vocab mode
@@ -648,6 +726,22 @@ int main()
 
 				if(select >= 0)
 				{
+				//----
+				// Find correct entry
+					if(v && listSelect>0 && (pressed&PSP_CTRL_CIRCLE))
+					{
+						for(int i = 0; i < kanjiVocabCount[select]; i++)
+						{
+							int lineNumber	= kanjiVocabLines[kanjiVocabIndex[select]+i];
+							if(vocabPointer[lineNumber] == src[listSelect])
+							{
+								cursor = i;
+								break;
+							}
+						}
+					}
+
+				//----
 					int	count			= kanjiVocabCount[select] + 1,
 							prevIndex	= prevCursor % count,
 							index			= cursor     % count;
@@ -656,6 +750,8 @@ int main()
 					while(index < 0)
 						index += count;
 
+
+				//----
 					float	x =   8.0f,
 							y = 140.0f;
 								font1.print(framebuffer, 400.0f, 32.0f, "JLPT", 0, 18);
@@ -668,12 +764,19 @@ int main()
 						ptr = font1.print(framebuffer,      x,     y, advance(ptr,'	', 2), '	', 18);
 						sprintf((char*)SCRATCHPAD, "0 / %u", count-1);
 						font1.print(framebuffer, 400.0f, 54.0f, (char*)SCRATCHPAD);
+
+						tmpKanji[0] = kanjiUnicode[select];
+						tmpKanjiCount = 1;
 					}
 					else
 					{
 						int	lineNumber	= kanjiVocabLines[kanjiVocabIndex[select]+index];
 
 						const char	*ptr	= vocabPointer[lineNumber];
+
+						CacheKanji(ptr, kanjiUnicode, nKanji);
+						cycleIdx = 0;
+
 						ptr = font->print(framebuffer, x,      50.0f, ptr, '	', 42);
 						ptr = font->print(framebuffer, x,     100.0f, ptr, '	');
 						ptr = font1.print(framebuffer, 444.0f, 32.0f, ptr, '	', 18);
@@ -720,9 +823,43 @@ int main()
 			}//Vocab mode
 
 		//----
+		//	Stroke order mode
+			if(currMode == 4)
+			{
+				Font &f = (scrollIdx & 1) ? *font : font6;
+				f.setSize(240);
+				f.print(framebuffer, 0, 220, kanjiUnicode[select]);
+
+				float	x = 250.0f, y = 90.0f;
+				font1.color = ColorLevel(levelKanji[select]) & 0xC0FFFFFF;
+				font1.print(framebuffer, x, 68.0f, advance(german ? advance(kanjiPointer[select]) : kanjiPointer[select]), '	', 16);
+
+			//	kanjidic data
+				const char *ptr = advance(kanjidicPointer[kanjiDicLink[select]],'	',6);
+				do
+				{
+					ptr = font1.print(framebuffer, x, y+=24.0f, ptr, ' ', 18, -2.0f);
+				}while(ptr[-1]!='	');
+				x = 340.0f;
+				y =  90.0f;
+				do
+				{
+					ptr = font1.print(framebuffer, x, y+=24.0f, ptr, ' ', 18, -2.0f);
+				}while(ptr[-1]!='	');
+						
+//					ptr = font1.print(framebuffer, x, max(tmp,y)+26.0f, ptr, '	', 18, 1.2f);
+
+				font1.color = WHITE;
+			}
+
+		//----
 		//	List mode
 			if(currMode == 1)
 			{
+			//	Restore old list position
+				if(v && listSelect >= 0 && prevMode!=1)
+					select = listSelect;
+
 				if(select < 0)			select += limit;
 				if(select >= limit)	select -= limit;
 
@@ -733,6 +870,17 @@ int main()
 						continue;
 					const float y = 38.85f * k + 30.0f;
 					const char *ptr = src[i];
+					if(k==3)
+					{
+						if(v)
+							CacheKanji(ptr);
+						else
+						{
+							tmpKanjiCount = 1;
+							tmpKanji[0] = kanjiUnicode[i];
+						}
+					}
+
 					font->color =
 					font1.color = k==3 ? WHITE : ColorLevel(level[i]);
 					font1.setSize(20);
@@ -741,7 +889,7 @@ int main()
 					sprintf((char*)SCRATCHPAD, "%i%%", int(0.392156862745098*level[i]+0.5));
 								font1.print(framebuffer,  400.0f, y, (char*)SCRATCHPAD);
 
-						ptr = font->print(framebuffer,   96.0f, y + (font==&font1 ? 3.0f : font==&font2 ? 3.0f : 0.0f), ptr, v||ka?'	':' ', 38, -2.0f);
+						ptr = font->print(framebuffer,   96.0f, y + (font==&font3 ? 2.0f : font==&font4 ? 0.0f : 3.0f), ptr, v||ka?'	':' ', 38, -2.0f);
 					if(!v)
 					{
 						if(!ka)
@@ -752,7 +900,7 @@ int main()
 
 				font->color =
 				font1.color = WHITE;
-				prevSelect = select;
+				listSelect = select;
 			}
 
 
@@ -789,19 +937,13 @@ int main()
 
 				//----
 				//	Buffer all kanji in q1
-					utf8.state = 0;
-					q1KanjiCount = 0;
-					const char *str = src[q1];
-					while((codepoint = utf8.decode(&str)))
-						if(codepoint == '	')
-							break;
-						else
-						if(codepoint >= UNICODE_CJK)		// Is Kanji?
-							q1Kanji[q1KanjiCount++] = codepoint;
-
+					tmpKanjiCount = 0;
+					if(v)
+						CacheKanji(src[q1], kanjiUnicode, nKanji);
+/*
 				//----
 				//	Adjust kanji in vocab
-/*					if(v)
+					if(v)
 					{
 						for(u16 n = 0; n < q1KanjiCount; n++)
 						for(int i = 0; i < nKanji; i++)
@@ -862,22 +1004,20 @@ int main()
 					{
 					//	Draw kanji
 						font->setSize(60);
-						font->print(framebuffer, x, font == &font1 ? 60.0f : font == &font2 ? 59.0f : 54.0f, kanjiUnicode[q1]);
+						font->print(framebuffer, x, font == &font1 ? 60.0f : font == &font2 ? 59.0f : font == &font4 ? 54.0f : 60.0f, kanjiUnicode[q1]);
 
 					//	Translation
 						ptr = advance(german ? advance(ptr) : ptr);
 						ptr = font1.print(framebuffer, x, 88.0f, ptr, '	', 21);
-					}
 
-					if(!v && !ka)
-					{
 					//	Statistics
 						font1.setSize(18);
-						font1.color = ColorLevel(level[q1]);
+						font1.color = ColorLevel(level[q1]) & 0xC0FFFFFF;
 						sprintf((char*)SCRATCHPAD, "#%i", q1+1);
 						font1.print(framebuffer, 340.0f, 40.0f, (char*)SCRATCHPAD);
 						sprintf((char*)SCRATCHPAD, "%i%%", q1>=0 ? int(0.392156862745098*level[q1]+0.5) : 0);
-						font1.print(framebuffer, 340.0f, 60.0f, (char*)SCRATCHPAD);
+						font1.print(framebuffer, 340.0f, 60.0f, level[q1] > prevLevel ? 0x2191 : level[q1] == prevLevel ? 0x2192 : 0x2193);
+						font1.print(framebuffer, 360.0f, 60.0f, (char*)SCRATCHPAD);
 						font->color =
 						font1.color = WHITE;
 
@@ -902,31 +1042,27 @@ int main()
 					font->color =
 					font1.color = WHITE;
 				}
+
+			// set list index
+//				listSelect = select = (q1 >= 0 ? q1 : testLimit-4);
 			}
 
 		//----
 		//	Components mode
 			if(currMode == 3)
 			{
-			// font2 doesn't support some radical components
-//				Font &fnt = font == &font2? font1 : *font;
 				Font &fnt = *font;
-
-				if(autoPlay)
-				{
-					font1.setSize(14);
-					font1.print(framebuffer, 425.0f, 265.0f, 0x25B7);	//	'>'
-				}
 
 			//	Draw kanji + components
 				const char *s = kanjiPointer[select];
 						
-				for(float y = 68.0f; ; y += 50.0f)
+				for(float y = 68.0f; y < 272.0f; y += 50.0f)
 				{
 					utf8.state	= 0;
 					u32	*comp	= (u32*) SCRATCHPAD,
 							count	= 0,
 							phon	= 0,
+							trad	= 0,
 							prev	= 0;
 
 					for( ; *s && s[0]!=' ' && s[0]!='\n'; s++)
@@ -934,8 +1070,8 @@ int main()
 						{
 							if(codepoint >= UNICODE_RAD_SUPP)// Is Kanji?
 							{
+								prev =
 								comp[count++] = codepoint;
-								prev = codepoint;
 							}
 							else
 							if(codepoint == 0x273D && prev)	// '*' = phonetic component
@@ -943,6 +1079,11 @@ int main()
 								phon = prev;
 								if(count>1)
 									count--;
+							}
+							else
+							if(codepoint == 0x2744 && prev)	// '*' = traditional form of the character
+							{
+								trad = prev;
 							}
 //							if(codepoint == 0x279E)				// '->' = original component
 //								count++;
@@ -995,7 +1136,7 @@ DRAW_COMP:
 FOUND_RADIKAL:
 
 					//	Check kanjidic.txt
-						u16 code = comp[0];
+						u32 code = comp[0];
 						for(u32 k = 0; k < count; k++)
 						{
 							const char *mng = NULL;
@@ -1019,10 +1160,8 @@ FOUND_RADIKAL:
 							}
 						}
 
-						fnt.setSize(42);
-						fnt.color = y == 68.0f ? 0xFF80C6FF : phon ? 0xFF80D9AE : WHITE;
-						fnt.print(framebuffer, 8.0f, y, code);
-						fnt.color = WHITE;
+						if(trad==code)
+							y = 268.0f;
 
 						if(stats && y == 68.0f)
 						{
@@ -1038,7 +1177,8 @@ FOUND_RADIKAL:
 							}
 							Font &f = font1;
 						//	Font &f = font2;
-								f.color = 0x55FFFFFF;	f.setSize(11);
+								f.color = 0x55FFFFFF;
+								f.setSize(11);
 								f.print(framebuffer,   8.0f, 14.0f, "radical");
 								f.print(framebuffer, 130.0f, 14.0f, "strokes",  0x0);
 								f.print(framebuffer, 218.0f, 14.0f, "freq",     0x0);
@@ -1053,9 +1193,13 @@ FOUND_RADIKAL:
 							s=	f.print(framebuffer, 437.0f, 16.0f, s,         '	');
 								f.color = WHITE;
 						}
-						font1.color = phon ? 0xFF80D9AE : WHITE;
+
+						Font &f = fnt.findChar(code) ? fnt : font1.findChar(code) ? font1 : font4;
+						f.setSize(42);
+						f.color = font1.color = (y == 68.0f ? 0xFF80C6FF : phon ? 0xFF80D9AE : trad==code ? 0xFFFF99CC : WHITE);
+						f.print(framebuffer, 8.0f, y, code);
 						if(on)							font1.print(framebuffer,  68.0f, y,       on,      '	', 18, -2.0f);
-						font1.color = WHITE;
+						f.color = font1.color = WHITE;
 						if(kun && y == 68.0f)		font1.print(framebuffer,  68.0f, y-22.0f, kun,     '	', 18, -2.0f);
 						if(meaning)						font1.print(framebuffer, 250.0f, y,       meaning, '	', (advance(meaning,'	') - meaning) > 30 ? 10 : 16, -3.0f);
 						if(japName && y != 68.0f)	font1.print(framebuffer, 250.0f, y-22.0f, japName, '\n', 18, -2.0f);
@@ -1069,11 +1213,20 @@ FOUND_RADIKAL:
 						}
 					}
 
-
-				//	ptrComp = advance(ptrComp, ' ');
 					if(s[-1] == '\n')
 						break;
 				}
+			}//components mode
+
+		//----
+		//	autoPlay
+			if(currMode==3 || currMode==4)
+			{
+				font1.setSize(21);
+				font1.color = autoPlay ? 0x80FFFFFF : 0x40FFFFFF;
+				font1.print(framebuffer, 411.0f, 268.0f, autoPlay ? 0x25BA : 0x25BB);
+//				font1.print(framebuffer, 411.0f, 268.0f, autoPlay ? 0x25B6 : 0x25B7);
+				font1.color = WHITE;
 			}
 
 		//----
@@ -1113,32 +1266,43 @@ FOUND_RADIKAL:
 		//	We're doing it now, to not slow things down
 			u32 sumA = 0;
 			double sumB = 0;
+			int newLimit = testLimit;
 			for(size_t i = 0; i < level.length; i++)
 			{
-	//			sum += level[i];
 				if(level[i] >= 128)
 					sumA++;
 				sumB += 0.00392156862745098 * level[i];
-			}
 
-		//----
-		// Each kanji with a rating of 155 (=5.0s reaction time) unlocks a new kanji
-			autoLimit = sumA + sumB/12.0 + 20;
-//			autoLimit = min(int(20.0 + 0.006465574372532171 * sum), limit);
-			int newLimit = max(testLimit, autoLimit);
+			//----
+			// Each kanji with a rating of 128 (= 50% = 5.0s reaction time) unlocks a new kanji
+			//	and every 16 perfect kanji unlock an additional one.
+				autoLimit = 20 + sumA + 0.0625*sumB;
+				if(autoLimit > limit)
+				{
+					newLimit = limit;
+					break;
+				}
+				if(i >= (size_t)autoLimit)
+					break;
+				else
+					newLimit = max(testLimit, autoLimit);
+			}
 			if(testLimit && ((newLimit)/10) > ((testLimit)/10))
 				currMode = 100;
 			testLimit = newLimit;
 
 		//----
 		//	Debug info: draw on display buffer
-			if(currMode == 1)
+			if(currMode != 0)
 			{
-				sprintf((char*)SCRATCHPAD, "%i / %i", testLimit, limit);
+//				sprintf((char*)SCRATCHPAD, "%i / %i", select, listSelect);
+//				sprintf((char*)SCRATCHPAD, "%i / %i", testLimit, limit);
 //				sprintf((char*)SCRATCHPAD, "%i , %i, %i", nKanji, nTest, count2);
-				font1.color = 0x55FFFFFF;
-				font1.print((void*)(framebuffer ? NULL : 0x88000), 4.0f, 8.0f, (char*)SCRATCHPAD, 0, 8);
-				font1.color = WHITE;
+//				font1.color = 0x80FFFFFF;
+//				font1.print((void*)(framebuffer ? NULL : 0x88000), 4.0f, 8.0f, (char*)SCRATCHPAD, 0, 8);
+//				sprintf((char*)SCRATCHPAD, "%i / %i", cycleIdx, tmpKanjiCount);
+//				font1.print((void*)(framebuffer ? NULL : 0x88000), 4.0f, 270.0f, (char*)SCRATCHPAD, 0, 8);
+//				font1.color = WHITE;
 			}
 
 		}//if state changed
@@ -1161,8 +1325,7 @@ FOUND_RADIKAL:
 				while(q0 < 0 || q0 == q1)
 				{
 					int i = rand(testLimit);
-//					if(randSquared()*randSquared() < 255 - level[i])
-					if(ProbLevel(level[i]) > randd())
+					if(ProbTable[level[i]] > rng.randf())
 						q0 = i;
 				}
 
@@ -1183,7 +1346,7 @@ FOUND_RADIKAL:
 		//----
 			if(pressed & (PSP_CTRL_LEFT|PSP_CTRL_RIGHT))
 			{
-				sprintf((char*)SCRATCHPAD, "Repetition :  %i", repetition);
+				sprintf((char*)SCRATCHPAD, "review :  %i", repetition);
 				font1.setSize(21);
 				font1.color = WHITE;
 				font1.print(currBuffer, 5.0f, 265.0f, (char*)SCRATCHPAD);
@@ -1199,7 +1362,7 @@ FOUND_RADIKAL:
 //				if(fr)
 //					len = (advance(ptr, '	') - ptr) - 1;
 
-				font->print(currBuffer, ka?42.0f:5.0f, v||ka ? 88.0f : font==&font1 ? 200.0f : font==&font2 ? 200.0f : 180.0f, ptr, v||ka?'	':' ', v ? (utf8.strlen(ptr,'	')>6?40:80) : ka?80:200, -2.0f);
+				font->print(currBuffer, ka?42.0f:5.0f, v||ka ? 88.0f : font == &font4 ? 180.0f : 200.0f, ptr, v||ka?'	':' ', v ? (utf8.strlen(ptr,'	')>6?40:80) : ka?80:200, -2.0f);
 			//----
 				if(resetTick1);
 					sceRtcGetCurrentTick(&tick1);
@@ -1224,13 +1387,25 @@ FOUND_RADIKAL:
 	{
 		if(modeUsed[0])
 		{
-			vec<u16>	stats(nKanji*2);
+			vec<u16>	stats(12+nKanji*2);
+
+		//----
+		//	save options
+			stats[0] = 'g';	stats[1] = german;
+			stats[2] = 'r';	stats[3] = repetition;
+			stats[4] = 'f';	stats[5] = selectedFont;
+			stats[6] = '1';	stats[7] = testLimitK;
+			stats[8] = '2';	stats[9] = testLimitV;
+			stats[10]= '3';	stats[11]= testLimitA;
+
+		//----
+		//	save kanji level
 			for(int i = 0; i < nKanji; i++)
 			{
-				stats[i*2]   = kanjiUnicode[i];
-				stats[i*2+1] = levelKanji[i];
+				stats[6+i*2]   = kanjiUnicode[i];
+				stats[6+i*2+1] = levelKanji[i];
 			}
-								file("kanji.stats",	PSP_O_CREAT|PSP_O_WRONLY).write(stats.data,			nKanji*2*sizeof(u16));
+								file("kanji.stats",	PSP_O_CREAT|PSP_O_WRONLY).write(stats.data,			stats.length*sizeof(u16));
 		}
 		if(modeUsed[1])	file("vocab.stats",	PSP_O_CREAT|PSP_O_WRONLY).write(levelVocab.data,	nVocab*sizeof(BYTE));
 		if(modeUsed[2])	file("kana.stats",	PSP_O_CREAT|PSP_O_WRONLY).write(levelKana.data,		nKana *sizeof(BYTE));

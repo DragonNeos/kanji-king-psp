@@ -44,7 +44,8 @@ const char *Font::print(void *framebuffer, float x, float y, const char *text, u
 	UTF8	utf8;
 	u32	codepoint = 0,
 			colA = color,
-			colB = 0x7FFFFFFF & color;
+//			colB = 0x80FFFFFF & color;
+			colB = ((color >> 25) << 24) | (0x00FFFFFF & color);	// halve alpha
 
 	const uint8_t *s = (BYTE*)text;
 

@@ -7,7 +7,7 @@ ASFLAGS = $(CFLAGS)
 
 LIBDIR =
 LDFLAGS = 
-LIBS = -lfreetype -lintraFont -lpspgum -lpspgu -lpsprtc -lz -lm
+LIBS = -lfreetype -lpspgum -lpspgu -lpsprtc -lpsppower -lz -lm
 
 EXTRA_TARGETS = EBOOT.PBP
 PSP_EBOOT_TITLE = Kanji King PSP

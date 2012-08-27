@@ -1,3 +1,4 @@
+#include <math.h>
 
 //-------------------------------------------------------------------------------------------------
 #define DISALLOW_COPY_AND_ASSIGN(TypeName) \
@@ -38,8 +39,8 @@ enum colors
 //-------------------------------------------------------------------------------------------------
 typedef uint8_t BYTE;
 
-static const float BYTE_TO_DOUBLE = 1.0 / 255.0;
-static const float BYTE_TO_FLOAT = 1.0f / 255.0f;
+const static double	BYTE_TO_DOUBLE	= 1.0  / 255.0;
+const static float	BYTE_TO_FLOAT	= 1.0f / 255.0f;
 
 //-------------------------------------------------------------------------------------------------
 template<typename T>
@@ -152,3 +153,40 @@ inline void Blend(u32 *dst, u32 src = WHITE, float alpha = 1.0f)
 				| (clamp(int(255.0f*b+0.5f), 0, 255) << 16);
 }
 
+
+//-------------------------------------------------------------------------------------------------
+inline void HSVtoRGB(float h, float s, float v, float* rgb)
+{
+	int i;
+	float f,p,q,t,
+			&r = rgb[0],
+			&g = rgb[1],
+			&b = rgb[2];
+
+	if(s)
+	{
+		h *= 6.0f;			// sector 0 to 5
+		i = (int)floor(h);
+		f = h - i;			// factorial part of h
+		p = v * (1.0f - s);
+		q = v * (1.0f - s*f);
+		t = v * (1.0f - s*(1.0f-f));
+
+		switch(i)
+		{
+			case 0:		r = v;	g = t;	b = p;	break;
+			case 1:		r = q;	g = v;	b = p;	break;
+			case 2:		r = p;	g = v;	b = t;	break;
+			case 3:		r = p;	g = q;	b = v;	break;
+			case 4:		r = t;	g = p;	b = v;	break;
+			default:		r = v;	g = p;	b = q;	break;
+		}
+	}
+	else
+	{
+	//	achromatic (grey)
+		r = v;
+		g = v;
+		b = v; 
+	}
+}
