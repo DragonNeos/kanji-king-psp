@@ -1,8 +1,13 @@
 #include "ttf.h"
+#include "utility.h"
+
+#include <freetype/freetype.h>
+#include <freetype/fttypes.h>
+#include <freetype/ftglyph.h>
+#include <freetype/ftimage.h>
 
 //-------------------------------------------------------------------------------------------------
-FT_Library FTLib = 0;
-
+FT_Library	FTLib = 0;
 
 //-------------------------------------------------------------------------------------------------
 const uint8_t UTF8::utf8d[] =
@@ -28,171 +33,364 @@ const uint8_t UTF8::utf8d[] =
 };
 
 
+//-------------------------------------------------------------------------------------------------
+float Font::strPixel(const uint32_t code)
+{
+//	get 'width' of the char in 1/64 pixels (taking into account the current size!)
+	FT_UInt k = findChar(code);
+	if(k && FT_Load_Glyph(face, k, FT_LOAD_FORCE_AUTOHINT)==0)
+		return 0.015625f * face->glyph->advance.x;				// 1/64
+
+	return 0.0f;
+}
 
 //-------------------------------------------------------------------------------------------------
-const char *Font::print(void *framebuffer, float x, float y, const char *text, u32 lim, int size, float linefeed)
+float Font::strPixel(const char* ptr, uint32_t delimiter)
 {
-//	special mode, for on and kun readings
-	const bool on_kun = (linefeed == -2.0f);
+	UTF8	utf;
+	u32	code	= 0,
+			sum	= 0;
+	int	tmpS	= s;
 
+	if(tmpS != 42)
+		setSize(42);
+
+	FT_Set_Transform(face, NULL, NULL);
+
+	for(;;)
+	{
+		code = utf.decode(&ptr);
+		if(code < 0x20 || code == delimiter)
+			break;
+
+	// Use a single width, for all kanji, at the first hiragana codepoint (which is unused)
+		u32 i = GlyphCacheIdx(code >= UNICODE_CJK ? UNICODE_HIRAGANA : code);
+
+		if(i >= 512 || glyphCache[i].advance==0)
+		{
+		//	get 'width' of the char in 1/64 pixels (taking into account the current size!)
+			FT_UInt k = findChar(code);
+			FT_Pos x = 0;
+//			if(k && FT_Load_Glyph(face, k, FT_LOAD_DEFAULT)==0)
+//			if(k && FT_Load_Glyph(face, k, FT_LOAD_FORCE_AUTOHINT)==0)
+			if(k && FT_Load_Glyph(face, k, FT_LOAD_TARGET_LIGHT)==0)
+//			if(k && FT_Load_Glyph(face, k, FT_LOAD_NO_HINTING)==0)
+//			if(k && FT_Load_Glyph(face, k, FT_LOAD_NO_SCALE|FT_LOAD_IGNORE_TRANSFORM)==0)
+			{
+				x = face->glyph->advance.x;
+//				x = face->glyph->linearHoriAdvance;
+				sum += x;
+			}
+
+			if(i < 512)
+//				glyphCache[i].advance = x==0 ? 1 : x <= 0xFFFF ? x : 0xFFFF;
+				glyphCache[i].advance = x==0 ? 1 : x;
+		}
+		else
+			sum += glyphCache[i].advance;	// already cached!
+	}
+
+	if(tmpS != 42)
+		setSize(tmpS);
+
+	return float(sum) * 3.72023809524e-4 * float(s);			// ~ 1/(64*42)
+//	return float(sum) * 0.5e-4 * float(s);
+//	return float(sum) * x_factor * float(s);
+}
+
+//-------------------------------------------------------------------------------------------------
+const char *Font::print(void *framebuffer, float x, float y, const char *text, u32 lim, int size, float linefeed, float xLim, int maxLines)
+{
 	if(size)
-		setSize(size);
+	{
+	//	adjust size to fit on screen
+		if(linefeed <= 0.0f && xLim <= 480.0f && maxLines==0)
+		{
+			setSize(42);
+			float w = xLim - x - 5.0f,
+					l = strPixel(text, lim),
+					pt = float(size);
 
-	const float x0 = x;
+			if(l > 1.0f)
+					pt = min(pt, w*42.0f / l);
+
+			if(subpixel && pt < 13.0f)
+				pt = min(pt+1.0f,13.0f);	// subpixel rendering has tighter tracking (no hinting), so we can afford a bigger font
+
+			if(FT_Set_Char_Size(face, pt*64.0f, 0, 0, 0) == 0)
+				s = pt;
+		}
+		else if(s!=size)
+			setSize(size);
+	}
+
+//	special mode, for on and kun readings
+	const bool	okurigana	= (linefeed <= -2.0f),
+					colored		= (linefeed <= -3.0f);
+	const float x0				= x;
+
+	if(okurigana && maxLines)
+		linefeed = 1.3f;
 
 //	Decode UTF-8
 	UTF8	utf8;
 	u32	codepoint = 0,
+			prevCode  = 0,
 			colA = color,
-//			colB = 0x80FFFFFF & color;
 			colB = ((color >> 25) << 24) | (0x00FFFFFF & color);	// halve alpha
 
-	const uint8_t *s = (BYTE*)text;
+	const uint8_t *ptr = (BYTE*)text;
+//	const char *ptr = text;
 
-	FT_UInt		left_glyph  = 0,
-					right_glyph = 0;
+	bool			dontPrint		= false;
+	int			line				= 0;
+	FT_UInt		left_glyph		= 0,
+					right_glyph		= 0;
 	FT_Vector	kerning;
 
-	for(; *s; ++s)
+	for(utf8.state = 0; *ptr; ++ptr)
 	{
-		if(!utf8.decode(&codepoint, *s))
+		if(!utf8.decode(&codepoint, *ptr))
 		{
-		//	New character
+//		//	New character
 			if(codepoint == lim				// Don't print delimiter
-			||	codepoint == '\n')			// newline
+			||	codepoint < 0x20)				// control characters < space, incl. tab and newline
+//			||	codepoint == '	'				// tab
+//			||	codepoint == '\n')			// newline
 				break;
-			if(on_kun)
+
+			if(okurigana)
 			{
-				if(codepoint == '	')			// tab
-					break;
-				if(codepoint == ' ')	{
+				if(codepoint == ' ') {
 					codepoint = 0x3000;		// ideographic space
-					color = colA;
+					if(colored)
+						color = colA;
 				}
-				if(codepoint == '.')
+				else if(colored && codepoint == '.')
 					color = colB;
 			}
 
-			right_glyph = FT_Get_Char_Index(face, codepoint);
+			right_glyph = findChar(codepoint);
 			if(right_glyph == 0)
-				right_glyph = FT_Get_Char_Index(face, '?');
+				right_glyph = findChar('?');
 
 			if(left_glyph)
 			{
 				if(FT_Get_Kerning(face, left_glyph, right_glyph, FT_KERNING_UNFITTED, &kerning) == 0)
+//				if(FT_Get_Kerning(face, left_glyph, right_glyph, FT_KERNING_DEFAULT,  &kerning) == 0)
 					x += kerning.x * 0.015625f;
 
 				left_glyph = 0;
 			}
 
-		//	line break?
-			if(x >= 480.0f-0.7f*size)
+		//----
+			if(x >= 512.0f)
+				dontPrint = true;
+
+			if(!(okurigana && codepoint == '.'))
+			if(!dontPrint)
 			{
-				x = x0;
-			//	y += size;
-			//	y += double(face->height) * double(face->size->metrics.y_scale) / double(face->units_per_EM);
-				y += linefeed * size;// float(face->size->metrics.y_scale);
-				if(linefeed <= 0.0f)
-					linefeed = -1.0f;
+				if(print(framebuffer, x, y, codepoint, &x) == 0)
+					left_glyph = right_glyph;
 			}
 
-
-			if(!(on_kun && codepoint == '.'))
-			if(!(linefeed == -1.0f))
+		//----
+			if(codepoint==' ' || codepoint==0x3000)
+			if(linefeed > 0.0f || xLim < 480.0f)
 			{
-				if(print(framebuffer, x, y, codepoint) == 0)
-				{
-					x += face->glyph->advance.x * 0.015625f;
+				float l = strPixel((const char *)(ptr+1), ' ');
 
-					left_glyph = right_glyph;
+			//	line break?
+				bool lineBreak = false;
+				if(x + l >= xLim)
+				{
+					lineBreak = true;
+				}
+				else if(prevCode==',')		// prematurely break at ',' if there is enough space
+				{
+					l = strPixel((const char *)(ptr+1));
+					if(x + l > xLim && x0 + l <= xLim && x0 + l < x)
+						lineBreak = true;
+				}
+
+				if(lineBreak)
+				{
+					if(!((++line >= maxLines && maxLines) || (linefeed <= 0.0f)))
+					{
+						x = x0;
+						y += linefeed * s;
+						left_glyph = 0;
+						prev_rsb_delta = 0;
+					}
+					else if(xLim < 480.0f)
+						dontPrint = true;
 				}
 			}
+
+			prevCode = codepoint;
 		}
 
 	}
 
+	if(size && s!=size)
+		setSize(size);
 	color = colA;
-	return (const char *) (s+1);
-
+	return (const char *) (ptr+1);
 }
 
 
-// max array size = Scratchpad size(16384) / sizeof(FT_Glyph)
-//	first 128 ~
-//static FT_Glyph *const tmp = (FT_Glyph *) SCRATCHPAD;
-//#define tmpSize 256							// array size
-//#include <pspgu.h>
-
 //-------------------------------------------------------------------------------------------------
-FT_Error Font::print(void *framebuffer, float x, float y, u32 codepoint)
+FT_Error Font::print(void *framebuffer, float x, float y, u32 codepoint, float *newX)
 {
-/*	for(int i = 0; i < tmpSize; i++)
-	{
-		if(tmp[i])
-			tmp[i]->
-	}
-*/
 	FT_Error err;
-//	err = FT_Load_Char (face, codepoint, FT_LOAD_RENDER);
-	FT_UInt charIndex = FT_Get_Char_Index(face, codepoint);
+
+	u32 i = GlyphCacheIdx(codepoint);
+	FT_UInt charIndex = findChar(codepoint);
 
 	if(charIndex == 0)
-		charIndex = FT_Get_Char_Index(face, '?');
-
-
-	err = FT_Load_Glyph(face, charIndex, FT_LOAD_RENDER);
-//	err = FT_Load_Glyph(face, charIndex, FT_LOAD_DEFAULT);
-
-//	FT_Glyph g;
-//	err = FT_Get_Glyph(face->glyph, &glyph );
-//	FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
-//	FT_Done_Glyph(glyph);
-
-	if(err)
-		return err;
-
-	u32 *const buf  = (u32*)((((u32)framebuffer)+VRAM) | UNCACHED);
-
-	const FT_GlyphSlot	&glyph	= face->glyph;
-	const FT_Bitmap		&bmp		= glyph->bitmap;
-
-	const int	X = (int)(x+0.5f),
-					Y = (int)(y+0.5f),
-					w = bmp.width,
-					h = bmp.rows,
-					l = glyph->bitmap_left,
-					t = glyph->bitmap_top;
-
-	for(int j = 0; j < h; j++)
-	for(int i = 0; i < w; i++)
 	{
-		BYTE src	= bmp.buffer[j*bmp.pitch + i];
-//		BYTE R	= bmp.buffer[j*bmp.pitch + 3*i];
-//		BYTE G	= bmp.buffer[j*bmp.pitch + 3*i+1];
-//		BYTE B	= bmp.buffer[j*bmp.pitch + 3*i+2];
-//		int  src	= int(R) + int(G) + int(B);
+		charIndex = findChar('?');
+		i = -1;
+	}
 
-	// skip fully transparent pixel
-		if(src)
+//----
+	const
+	BYTE*	data = NULL;
+	int	w = 0,
+			h = 0,
+			pitch = 0,
+			lsb = 0,
+			rsb = 0;
+	float	advance = 0.0f;
+
+//----
+//	if(true)
+	if(i >= 512 || s <= 12 || subpixel || glyphCache[i].advance==0 || glyphCache[i].bmp.buffer==NULL || glyphCache[i].bmp.size!=s)
+	{
+		if(subpixel)
 		{
-			int	pixX = (i+X+l) & (BUF_WIDTH-1),
-					pixY = (j+Y-t);
+			float subX = x - int(x);
+			x = int(x);
+			if(newX)
+				*newX = x;
 
-			if(pixY < 0 || pixY >= SCR_HEIGHT)
-				continue;
+			FT_Vector adv   = {int(subX*64.0f + 0.5f), 0};
+			FT_Matrix scale = {3*65536, 0, 0, 65536};
 
-			u32 *dst = buf + pixY*BUF_WIDTH + pixX;
+			FT_Set_Transform(face, &scale, &adv);
+		}
+		else
+			FT_Set_Transform(face, NULL, NULL);
 
-			Blend(dst, color, BYTE_TO_FLOAT * src);
-//			*dst = (R) | (G << 8) | (B << 16);
+	//	err = FT_Load_Glyph(face, charIndex, FT_LOAD_RENDER);
+	//	err = FT_Load_Glyph(face, charIndex, FT_LOAD_DEFAULT);
+	//	err = FT_Load_Glyph(face, charIndex, FT_LOAD_FORCE_AUTOHINT);
+	//	err = FT_Load_Glyph(face, charIndex, FT_LOAD_TARGET_LIGHT);		// seems to produce better results (e.g., no missing lines in kanji)
+		err = FT_Load_Glyph(face, charIndex, subpixel ? FT_LOAD_NO_HINTING : FT_LOAD_TARGET_LIGHT);
+
+		if(err==0)
+	//		err = FT_Render_Glyph(face->glyph, FT_RENDER_MODE_LCD);		// unfortunately not available because of patents
+			err = FT_Render_Glyph(face->glyph, FT_RENDER_MODE_LIGHT);
+
+		if(err)
+			return err;
+
+	//----
+		const FT_GlyphSlot	&glyph	= face->glyph;
+		const FT_Bitmap		&bmp		= glyph->bitmap;
+
+		x			+= subpixel ? (glyph->bitmap_left / 3.0f) : glyph->bitmap_left;
+		y			-= glyph->bitmap_top;
+		w			= bmp.width;
+		h			= bmp.rows;
+		pitch		= bmp.pitch;
+		data		= bmp.buffer;
+		advance	= glyph->advance.x * 0.015625f;
+		lsb		= glyph->lsb_delta;
+		rsb		= glyph->rsb_delta;
+
+//		if(lsb)	debug2 = lsb;
+//		if(rsb)	debug3 = rsb;
+
+	//----
+//		if(false)
+		if(i < 512 && s > 12 && !subpixel && glyphCache[i].advance)
+		{
+			BMP &dst = glyphCache[i].bmp;											// cached the bmp
+			free(dst.buffer);
+			dst.buffer = (BYTE*)malloc(h*pitch);
+			if(dst.buffer)
+			{
+				dst.left		= glyph->bitmap_left;
+				dst.top		= glyph->bitmap_top;
+				dst.width	= w;
+				dst.rows		= h;
+				dst.pitch	= pitch;
+				dst.size		= s;
+				dst.lsb_delta = glyph->lsb_delta;
+				dst.rsb_delta = glyph->rsb_delta;
+				memcpy(dst.buffer, data, h*pitch);
+			}
+
+//			if(glyphCache[i].advance == 0)
+//				glyphCache[i].advance = int(advance / (x_factor * s) + 0.5f);
+		}
+
+//		color |= 0x00FF0000;
+	}
+	else
+	{
+//		color &= 0xFF00FFFF;
+
+		const BMP &bmp = glyphCache[i].bmp;										// already cached!
+
+		x		+= bmp.left;
+		y		-= bmp.top;
+		w		=  bmp.width;
+		h		=  bmp.rows;
+		pitch	=  bmp.pitch;
+		data	=  bmp.buffer;
+//		advance= glyphCache[i].advance * x_factor * s;
+		advance= glyphCache[i].advance * 3.72023809524e-4 * float(s);
+		lsb	=  bmp.lsb_delta;
+		rsb	=  bmp.rsb_delta;
+	}
+
+
+//----
+	if(newX)
+	{
+		if(subpixel)
+		{
+			*newX += advance / 3.0f + 0.015625f * (lsb - rsb);
+			x += 0.015625f * lsb;
+		}
+		else
+		{
+			*newX += advance;
+
+			int d = prev_rsb_delta - lsb;
+			if(d >= 32)
+			{
+				x -= 1.0f;
+				*newX -= 1.0f;
+			}
+			else if (d < -32)
+			{
+				x += 1.0f;
+				*newX += 1.0f;
+			}
+			
+			prev_rsb_delta = rsb;
 		}
 	}
 
-/*	sceGuEnable(GU_TEXTURE_2D);
-	sceGuTexMode(GU_PSM_T8, 1, 0, 0);
-	sceGuTexFunc(GU_TFX_BLEND, GU_TCC_RGBA);
-	sceGuTexImage(0, bmp.width, bmp.rows, 
-*/
+//----
+	if(subpixel)
+		DrawBMPSubPixel(framebuffer, x, y, data, w, h, pitch, color);
+	else
+		DrawBMP			(framebuffer, x, y, data, w, h, pitch, color);
+
 	return 0;
 }
 

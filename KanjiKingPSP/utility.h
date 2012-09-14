@@ -1,3 +1,5 @@
+#ifndef UTILITY_H
+#define UTILITY_H
 #include <math.h>
 
 //-------------------------------------------------------------------------------------------------
@@ -36,11 +38,19 @@ enum colors
 };
 */
 
+extern int debug1, debug2, debug3;
+
+extern bool subpixel;						// do subpixel rendering?
+
 //-------------------------------------------------------------------------------------------------
-typedef uint8_t BYTE;
+typedef uint8_t	BYTE;
+typedef uint16_t	WORD;
 
 const static double	BYTE_TO_DOUBLE	= 1.0  / 255.0;
 const static float	BYTE_TO_FLOAT	= 1.0f / 255.0f;
+const static float	WORD_TO_FLOAT	= 1.0f / 65535.0f;
+const static float	_1_3				= 1.0f / 3.0f;
+const static float	_2_3				= 2.0f / 3.0f;
 
 //-------------------------------------------------------------------------------------------------
 template<typename T>
@@ -61,6 +71,15 @@ template<typename T>
 inline const T &clamp(const T &x, const T &a, const T &b)
 {
 	return min(max(x,a),b);
+}
+
+//-------------------------------------------------------------------------------------------------
+template<typename T>
+inline const T &wrap(T &x, const T &lim)
+{
+	while(x < 0)		x += lim;
+	while(x >= lim)	x -= lim;
+	return x;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -117,40 +136,43 @@ inline void AlignedFree(void *alignedPtr)
 
 
 //-------------------------------------------------------------------------------------------------
-inline void Blend(u32 *dst, u32 src = WHITE, float alpha = 1.0f)
+inline void Blend(u32 *dst, float R, float G, float B, float A = 1.0f)
 {
 	const u32 rgba = *dst;
 	float	r = BYTE_TO_FLOAT * ((rgba & 0x000000FF)),
 			g = BYTE_TO_FLOAT * ((rgba & 0x0000FF00) >> 8),
 			b = BYTE_TO_FLOAT * ((rgba & 0x00FF0000) >> 16);
-//			a = BYTE_TO_FLOAT * ((rgba & 0xFF000000) >> 24);
 
-	if(src!=WHITE)
-	{
-		const float	R = BYTE_TO_FLOAT * ((src & 0x000000FF)),
-						G = BYTE_TO_FLOAT * ((src & 0x0000FF00) >> 8),
-						B = BYTE_TO_FLOAT * ((src & 0x00FF0000) >> 16),
-						A = BYTE_TO_FLOAT * ((src)              >> 24) * alpha,
-						d = 1.0f - A;
+	const float	d = 1.0f - A;
 
-		r = r*d + R*A;
-		g = g*d + G*A;
-		b = b*d + B*A;
-	}
-	else
-	{
-	//	Small optimization for white, not sure if its worth the branch.
-		const float	d = 1.0f - alpha;
+	r = r*d + R*A;
+	g = g*d + G*A;
+	b = b*d + B*A;
 
-		r = r*d + alpha;
-		g = g*d + alpha;
-		b = b*d + alpha;
-	}
+	*dst =		(min(int(255.0f*r+0.5f), 255))
+				|	(min(int(255.0f*g+0.5f), 255) << 8)
+				|	(min(int(255.0f*b+0.5f), 255) << 16);
+}
 
-	*dst =	  (rgba & 0xFF000000)		// keep dst alpha
-				| (clamp(int(255.0f*r+0.5f), 0, 255))
-				| (clamp(int(255.0f*g+0.5f), 0, 255) << 8)
-				| (clamp(int(255.0f*b+0.5f), 0, 255) << 16);
+//-------------------------------------------------------------------------------------------------
+inline void Blend(u32 *dst, u32 src = WHITE, float alpha = 1.0f)
+{
+	const float	R = BYTE_TO_FLOAT * ((src & 0x000000FF)),
+					G = BYTE_TO_FLOAT * ((src & 0x0000FF00) >> 8),
+					B = BYTE_TO_FLOAT * ((src & 0x00FF0000) >> 16),
+					A = BYTE_TO_FLOAT * ((src)              >> 24) * alpha;
+	Blend(dst, R, G, B, A);
+}
+
+//-------------------------------------------------------------------------------------------------
+inline void BlendMax(u32 *dst, BYTE R, BYTE G, BYTE B)
+{
+	const u32 rgba = *dst;
+	R = max(R, (BYTE)((rgba & 0x000000FF)      ));
+	G = max(G, (BYTE)((rgba & 0x0000FF00) >>  8));
+	B = max(B, (BYTE)((rgba & 0x00FF0000) >> 16));
+
+	*dst = (R) | (G << 8) | (B << 16);
 }
 
 
@@ -190,3 +212,107 @@ inline void HSVtoRGB(float h, float s, float v, float* rgb)
 		b = v; 
 	}
 }
+
+
+//-------------------------------------------------------------------------------------------------
+inline void DrawBMPSubPixel(void *framebuffer, float x, float y, const BYTE *data, int w, int h, int pitch, u32 color)
+{
+	u32 *const buf = (u32*)((((u32)framebuffer)+VRAM) | UNCACHED);
+
+	const
+	float	a = BYTE_TO_FLOAT * ((color)              >> 24),
+			r = BYTE_TO_FLOAT * ((color & 0x000000FF))		* a,
+			g = BYTE_TO_FLOAT * ((color & 0x0000FF00) >> 8)	* a,
+			b = BYTE_TO_FLOAT * ((color & 0x00FF0000) >> 16)* a;
+
+//	The fractional part of x determines whether
+//	the first column of pixels is considered red, green or blue
+	const float fract = x - int(x);
+	int								d =  0;
+	if			(fract >= _2_3)	d = -2;
+	else if	(fract >= _1_3)	d = -1;
+
+	const int lim_w = w / 3 + 1,
+					iX  = int(x),
+					iY  = int(y);
+	for(int j = 0; j < h; j++)
+	for(int i = 0; i < lim_w; i++)
+	{
+		const	int	iR	= 3*i+d,
+						iG	= 3*i+d+1,
+						iB	= 3*i+d+2;
+		const	BYTE	R	= iR < 0 || iR >= w ? 0 : data[j*pitch + iR],
+						G	= iG < 0 || iG >= w ? 0 : data[j*pitch + iG],
+						B	= iB < 0 || iB >= w ? 0 : data[j*pitch + iB];
+
+		const int sum = int(R) + int(G) + int(B);
+
+	// skip fully transparent pixel
+		if(sum)
+		{
+			int	pixX = (iX+i),
+					pixY = (iY+j);
+
+			if(pixX >= 0 && pixX < BUF_WIDTH
+			&&	pixY >= 0 && pixY < SCR_HEIGHT)
+			{
+				const	float	R_ = R * BYTE_TO_FLOAT * r,
+								G_ = G * BYTE_TO_FLOAT * g,
+								B_ = B * BYTE_TO_FLOAT * b;
+
+				u32 *dst = buf + pixY*BUF_WIDTH + pixX;
+
+				BlendMax(dst, int(R_*255.0f+0.5f), int(G_*255.0f+0.5f), int(B_*255.0f+0.5f));
+	//			*dst = (R) | (G << 8) | (B << 16);
+			}
+		}
+	}
+}
+
+
+//-------------------------------------------------------------------------------------------------
+inline void DrawBMP(void *framebuffer, int x, int y, const BYTE *data, int w, int h, int pitch, u32 color)
+{
+	const float	R = BYTE_TO_FLOAT * ((color & 0x000000FF)),
+					G = BYTE_TO_FLOAT * ((color & 0x0000FF00) >> 8),
+					B = BYTE_TO_FLOAT * ((color & 0x00FF0000) >> 16);
+//					A = BYTE_TO_FLOAT * ((color)              >> 24);
+	const int	A = color >> 24;
+
+	u32 *const buf = (u32*)((((u32)framebuffer)+VRAM) | UNCACHED);
+
+	for(int j = 0; j < h; j++)
+	for(int i = 0; i < w; i++)
+	{
+		BYTE src	= data[j*pitch + i];
+
+	// skip fully transparent pixel
+		if(src)
+		{
+			int	pixX = (x+i),
+					pixY = (y+j);
+			if(pixX >= 0 && pixX < BUF_WIDTH
+			&&	pixY >= 0 && pixY < SCR_HEIGHT)
+			{
+				u32 *dst = buf + pixY*BUF_WIDTH + pixX;
+//				const float a = BYTE_TO_FLOAT * src;
+				const float a = 1.537870049980777e-5f * (A * int(src));
+
+	//			*dst = (R) | (G << 8) | (B << 16);
+	//			BlendMax(dst, int(R*a*255.0f+0.5f), int(G*a*255.0f+0.5f), int(B*a*255.0f+0.5f));
+	//			Blend(dst, color, BYTE_TO_FLOAT * src);
+				Blend(dst, R, G, B, a);
+			}
+		}
+	}
+
+/*	sceGuEnable(GU_TEXTURE_2D);
+	sceGuTexMode(GU_PSM_T8, 1, 0, 0);
+	sceGuTexFunc(GU_TFX_BLEND, GU_TCC_RGBA);
+	sceGuTexImage(0, bmp.width, bmp.rows, 
+*/
+}
+
+
+#endif//UTILITY_H
+
