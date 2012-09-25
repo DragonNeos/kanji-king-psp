@@ -199,6 +199,29 @@ public:
 };
 
 
+//-------------------------------------------------------------------------------------------------
+// Super Fast Blur v1.1
+// by Mario Klingemann <http://incubator.quasimondo.com>
+// converted to C++ by Mehmet Akten, <http://www.memo.tv>
+//
+// Tip: Multiple invovations of this filter with a small
+// radius will approximate a gaussian blur quite well.
+//-------------------------------------------------------------------------------------------------
+struct SuperFastBlur
+{
+	vec<BYTE>	dv;
+
+//+------------------------------------------------------------------+
+	SuperFastBlur() : dv(272*3*(2*1+1))
+	{
+		int div = 2*1+1;
+		for(int i = 0; i < 256*div; i++)
+			dv[i] = i / div;
+	}
+
+//+------------------------------------------------------------------+
+	void blur(BYTE *pix, int w, int h);
+};
 
 extern FT_Library	FTLib;
 
@@ -299,7 +322,7 @@ public:
 			setSize(size);
 
 //		x_factor = 48.0 / (double(face->size->metrics.x_scale) * double(face->units_per_EM));
-		debug1 = sizeof(GlyphData);
+//		debug1 = sizeof(GlyphData);
 	}
 
 //+------------------------------------------------------------------+
@@ -320,8 +343,13 @@ public:
 
 //+------------------------------------------------------------------+
 //	Returns the length of the string in pixel, if rendered at the current size.
-	float strPixel(const char* s, uint32_t delimiter = 0x0);
-	float strPixel(uint32_t code);
+	float	strPixel(const char *s, uint32_t delimiter = 0x0);
+	float	strPixel(const u32  *s, uint32_t delimiter = 0x0);
+	float	strPixel(uint32_t code);
+
+//+------------------------------------------------------------------+
+//	Returns the required number of lines, for rendering the string the indicated size.
+	int	strLines(float size, float width);
 
 //+------------------------------------------------------------------+
 //	Returns the character index, or 0 if the char is not found.
@@ -353,7 +381,7 @@ public:
 //	@return a pointer to the next character after the delimiter.
 //	All control characters < 0x20, incl. NULL, tab and newline are
 //	always delimiter.
-	const char *print(void *framebuffer, float x, float y, const char *text, u32 delimiter = 0x0, int pt = 0, float linefeed = 0.0f, float xLim = 480.0f, int maxLines = 0);
+	const char *print(void *framebuffer, float x, float y, const char *text, u32 delimiter = 0x0, int pt = 0, float linefeed = 0.0f, float xLim = 480.0f, int maxLines = 0, int *lines = NULL);
 	FT_Error    print(void *framebuffer, float x, float y, u32 codepoint, float *newX = NULL);
 };
 

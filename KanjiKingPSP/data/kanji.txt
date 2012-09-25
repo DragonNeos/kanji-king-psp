@@ -93,7 +93,7 @@
 別 口 勹 刂➞刀	separate	getrennt
 丁 一 亅	street	Häuserblock
 町 田 丁✽	village	Stadt
-可 丁 口	can	möglich
+可 丁 口  司	can	möglich
 頂 丁✽ 頁	place on the head	auf den Kopf
 子	child	Kind
 孔 ⼦➞子 乚➞乙	cavity	Ritze
@@ -132,7 +132,7 @@
 奇 大 可✽	strange	seltsam
 川	stream	Fluss
 州 丶 川➞巛 丶 丶	state	Staat
-順 川➞巛 頁	obey	gehorchen
+順 川➞巛 頁  訓	obey	gehorchen
 水	water	Wasser
 氷 水 丶	icicle	Eiszapfen
 永 丶 水	eternity	Ewigkeit
@@ -188,7 +188,7 @@
 埋 ⼟➞土 里✽	bury	begraben
 厘 厂 里✽	rin	Rin
 量 旦 里	quantity	Menge
-同 冂 一 口	same	identisch
+同 冂 一 口  司	same	identisch
 洞 氵➞水 同✽	den	Grotte
 胴 月➞肉 同✽	trunk	Rumpf
 向 丿 冂 口	yonder	gerichtet an
@@ -218,7 +218,7 @@
 椅 ⽊➞木 奇✽	chair	Stuhl
 枯 ⽊➞木 古✽	wither	verdorren
 朴 ⽊➞木 卜✽	crude	schlicht
-札 ⽊➞木 乚➞乙	tag	Etikett
+札 ⽊➞木 乚➞乙✽	tag	Etikett
 村 ⽊➞木 寸✽	town	Dorf
 相 ⽊➞木 目	inter-	einander
 杏 木 口	apricot	Aprikose
@@ -231,14 +231,12 @@
 昧 ⽇➞日 未✽	obscure	unklar
 妹 ⼥➞女 未✽	younger sister	jüngere Schwester
 朱 丿 未	vermilion	zinnoberrot
-株 ⽊➞木 朱✽	stocks	Aktie
+株 ⽊➞木 朱✽  秩	stocks	Aktie
 草 艹➞艸 早✽	grass	Gras
 苗 艹➞艸 田	seedling	Setzling
 若 艹➞艸 右	young	jung
 苦 艹➞艸 古✽	suffering	leiden
 苛 艹➞艸 可✽	bullying	Schikane
-薄 艹➞艸 溥✽ 氵➞水 尃	dilute	verdünnen
-藻 艹➞艸 澡✽ 氵➞水 喿✽	seaweed	Seetang
 葉 艹➞艸 世 木	leaf	Laub
 寛 宀 莧✽ 寬❄	tolerant	nachsichtig
 墓 莫✽ 土	grave	Grab
@@ -306,11 +304,11 @@
 喩 ⼝➞口 兪✽	metaphor	Metapher
 前 䒑 月➞舟 刂➞刀	in front	vor
 煎 前 灬➞火	roast	rösten
-冬 夂 冫	winter	Winter
-各 夂 口	each	jeder
+冬 ⼡➞夂 冫	winter	Winter
+各 ⼡➞夂 口	each	jeder
 格 ⽊➞木 各✽	status	Status
 賂 ⾙➞貝 各	graft	Schmiergeld
-略 田 各✽	abbreviation	Abkürzung
+略 ⽥➞田 各✽	abbreviation	Abkürzung
 客 宀 各✽	guest	Gast
 額 客✽ 頁	forehead	Stirn
 夏 一 自 夂	summer	Sommer
@@ -361,7 +359,7 @@
 訂 訁➞言 丁✽	revise	korrigieren
 訃 訁➞言 卜	obituary	Todesanzeige
 討 訁➞言 寸✽	chastise	züchtigen
-訓 訁➞言 川✽➞巛	instruction	Belehrung
+訓 訁➞言 川✽➞巛 順	instruction	Belehrung
 詔 訁➞言 召✽	imperial edict	kaiserlicher Erlass
 詰 訁➞言 吉✽	packed	stopfen
 話 訁➞言 舌✽	tale	sprechen
@@ -378,8 +376,6 @@
 弐 一 弋 二✽ 貳❄	II (two)	II. (zwei)
 域 ⼟➞土 或✽	range	Region
 賊 ⾙➞貝 戎 則✽	burglar	plündern
-栽 𢦏✽ 土 ⼽➞戈 木	plantation	Plantage
-載 𢦏✽ 土 ⼽➞戈 車	load	beladen
 茂 艹➞艸 戊✽	overgrown	bewachsen
 戚 厂 尗✽ 上 小	relatives	Verwandte
 成 𠂊➞勹 ⼽➞戈	turn into	werden zu
@@ -392,6 +388,14 @@
 桟 ⽊➞木 戋➞戔✽ 棧❄	scaffold	Gerüst
 銭 釒➞金 戋➞戔✽ 錢❄	coin	Münze
 浅 氵➞水 戋➞戔✽ 淺❄	shallow	seicht
+衣 亠	garment	Gewand
+裁 𢦏✽ 土 ⼽➞戈 衣	tailor	schneidern
+栽 𢦏✽ 土 ⼽➞戈 木	plantation	Plantage
+載 𢦏✽ 土 ⼽➞戈 車	load	beladen
+装 壮✽ 衣 裝❄	attire	Aufmachung
+遠 袁✽ ⻌➞辶	distant	fern
+猿 ⺨➞犬 袁✽	monkey	Affe
+初 衤➞衣 刀	first time	erstmals
 止 卜	stop	stoppen
 歩 止 少 步❄	walk	spazieren
 渉 氵➞水 歩 涉❄	ford	Furt
@@ -412,33 +416,22 @@
 是 日 正 龰➞止	just so	genau so
 題 是✽ 頁	topic	Thema
 堤 ⼟➞土 是✽	dike	Deich
-建 聿 廴	build	errichten
 鍵 釒➞金 建✽	key	Schlüssel
-延 正 廴	prolong	verlängern
-誕 訁➞言 延✽	nativity	Geburt
 礎 ⽯➞石 楚✽	cornerstone	Grundstein
 婿 ⼥➞女 胥	bridegroom	Bräutigam
-衣 亠	garment	Gewand
-裁 𢦏✽ 土 ⼽➞戈 衣	tailor	schneidern
-装 壮✽ 衣 裝❄	attire	Aufmachung
-裏 衣 里✽	back	Rückseite
-哀 衣 口	pathetic	Erbarmen
-遠 袁✽ ⻌➞辶	distant	fern
-猿 ⺨➞犬 袁✽	monkey	Affe
-初 衤➞衣 刀	first time	erstmals
 巾	towel	Tuch
-布 𠂇 巾 父✽	linen	Stoff
 帆 ⼱➞巾 凡✽	sail	Segel
 幅 ⼱➞巾 畐✽	hanging scroll	Rollbild
 帽 ⼱➞巾 冒✽	cap	Mütze
 幌 ⼱➞巾 晃	canopy	Plane
 幕 莫✽ 巾	curtain	Vorhang
 錦 釒➞金✽ 帛	brocade	Brokat
+布 𠂇 巾 父✽	linen	Stoff
 市 亠 巾 止✽	market	Markt
 柿 ⽊➞木 市✽	persimmon	Persimone
 姉 ⼥➞女 市✽	elder sister	ältere Schwester
 肺 月➞肉 市	lungs	Lunge
-帯 丗 冖 巾 帶❄	sash	Gurt
+帯 丗 冖 巾 帶❄	sash	Gürtel
 滞 氵➞水 帯✽ 滯❄	stagnate	stocken
 刺 朿✽ 刂➞刀	thorn	Stachel
 制 ⺧➞牛 巾 刂➞刀	system	System
@@ -457,7 +450,7 @@
 沃 氵➞水 夭✽	irrigate	fruchtbar
 立 亠	stand up	stehen
 泣 氵➞水 立	cry	weinen
-章 音 十	badge	Abzeichen
+章 音 十 立 早	badge	Abzeichen
 競 立 兄✽ 立 兄	vie	konkurrieren
 帝 亠 冖 巾	sovereign	Imperator
 諦 訁➞言 帝✽	renunciation	aufgeben
@@ -519,16 +512,16 @@
 亡 亠	deceased	verstorben
 盲 亡✽ 目	blind	blind
 妄 亡✽ 女	delusion	Wahn
-荒 艹➞艸 亡✽ ⼮	laid waste	verwüsten
+荒 艹➞艸 亡✽ 川 慌	laid waste	verwüsten
 望 亡✽ 月 王➞玉	ambition	Verlangen
 方 亠	direction	Richtung
 妨 ⼥➞女 方✽	disturb	hindern
 坊 ⼟➞土 方✽	boy	Junge
-芳 艹➞艸 方✽	perfumed	wohlriechend
 肪 月➞肉 方✽	obese	verfetten
 訪 訁➞言 方✽	call on	besuchen
 放 ⽅✽➞方 攵➞攴	set free	freilassen
 激 氵➞水 敫✽	violent	heftig
+芳 艹➞艸 方✽	perfumed	wohlriechend
 脱 月➞肉 兌✽	undress	sich ausziehen
 説 訁➞言 兌✽	explanation	Auslegung
 鋭 釒➞金 兌✽	pointed	spitz
@@ -541,6 +534,9 @@
 錬 釒➞金 東✽ 鍊❄	tempering	härten
 妊 ⼥➞女 壬✽	pregnancy	Empfängnis
 廷 壬✽ 廴	courts	Gerichtshof
+建 聿 廴	build	errichten
+延 正 廴	prolong	verlängern
+誕 訁➞言 延✽	nativity	Geburt
 染 氵➞水 九 木	dye	färben
 燃 ⽕➞火 然✽	burn	brennen
 賓 宀 少 貝 賓❄	V.I.P.	Ehrengast
@@ -655,7 +651,7 @@
 息 自 心	breath	Atem
 憩 舌 息	recess	Rast
 想 相✽ 心	concept	Idee
-恐 工 凡 心	fear	Furcht
+恐 巩✽ 工✽ 凡 心	fear	Furcht
 惑 或✽ 心	beguile	unsicher
 感 咸✽ 心	emotion	Gefühl
 憂 百 冖 心 夂	melancholy	Trübsinn
@@ -666,12 +662,12 @@
 悼 忄➞心 卓✽	lament	beklagen
 悟 忄➞心 吾✽	enlightenment	Erleuchtung
 怖 忄➞心 布✽	dreadful	schrecklich
-慌 忄➞心 荒✽	disconcerted	überstürzt
+慌 忄➞心 荒✽  流	disconcerted	überstürzt
 悔 忄➞心 毎✽ 悔❄	repent	bereuen
 憎 忄➞心 曽✽ 憎❄	hate	hassen
 慣 忄➞心 貫✽	accustomed	Gewohnheit
 愉 忄➞心 兪✽	pleasure	Vergnügen
-惰 忄➞心 左 月➞肉 隋	lazy	faul
+惰 忄➞心 左 月➞肉 隋✽	lazy	faul
 慎 忄➞心 真✽ 愼❄	humility	Mäßigung
 憾 忄➞心 感✽	remorse	Bedauern
 憶 忄➞心 意✽	recollection	Gedächtnis
@@ -719,7 +715,7 @@
 抄 扌➞手 少✽	extract	Auszug
 捗 扌➞手 歩	make headway	vorankommen
 掛 扌➞手 卦✽	hang	hängen
-揃 扌➞手 前	muster	vollständig
+揃 扌➞手 前	muster	Zusammenstellung
 我 手 ⼽➞戈	ego	Ego
 義 羊 我✽	righteousness	Gerechtigkeit
 議 訁➞言 義✽	deliberation	Besprechung
@@ -807,7 +803,7 @@
 弁 厶 廾 辨❄	valve	Klappe
 台 厶✽ 口 臺❄	pedestal	Sockel
 怠 台✽ 心	neglect	vernachlässigen
-治 氵➞水 台✽	reign	regieren
+治 氵➞水 台✽  沿	reign	regieren
 冶 冫 台	metallurgy	Metallurgie
 始 ⼥➞女 台✽	commence	beginnen
 胎 月➞肉 台✽	womb	Mutterleib
@@ -817,12 +813,12 @@
 会 亼 云 會❄	meeting	Zusammenkunft
 至 厶 土	climax	erreichen
 室 宀 至✽	room	Zimmer
-到 ⾄➞至 刂➞刀✽	arrival	ankommen
-致 ⾄➞至✽ 攵➞攴	doth	herbeiführen
+到 ⾄➞至 刂✽➞刀	arrival	ankommen
+致 ⾄✽➞至 攵➞攴	doth	herbeiführen
 互 二 彑	mutually	gegenseitig
 充 𠫓 儿	allot	füllen
 銃 釒➞金 充✽	gun	Gewehr
-流 氵➞水 㐬✽	current	Strömung
+流 氵➞水 㐬✽ 荒 慌	current	Strömung
 硫 ⽯➞石 㐬✽	sulfur	Schwefel
 棄 𠫓 丗 木	abandon	verwerfen
 育 𠫓 月➞肉	bring up	aufziehen
@@ -857,7 +853,7 @@
 容 宀 谷✽	contain	Inhalt
 溶 氵➞水 容✽	melt	schmelzen
 鉛 釒➞金 㕣✽	lead (metal)	Blei
-沿 氵➞水 㕣✽	run alongside	entlang verlaufen
+沿 氵➞水 㕣✽  治	run alongside	entlang verlaufen
 党 尚✽ 儿 黨❄	party	Partei
 堂 尚✽ 土	hall	Halle
 常 尚✽ 巾	usual	üblich
@@ -961,7 +957,7 @@
 述 朮✽ ⻌➞辶	mention	erwähnen
 和 ⽲✽➞禾 口	harmony	Harmonie
 私 ⽲➞禾 厶✽	private	privat
-稿 ⽲➞禾 高✽	draft	Manuskript
+稿 ⽲➞禾 高✽  橋	draft	Manuskript
 稼 ⽲➞禾 家✽	earnings	Einkünfte
 程 ⽲➞禾 呈✽	extent	Ausmaß
 税 ⽲➞禾 兌✽	tax	Steuern
@@ -969,7 +965,7 @@
 移 ⽲➞禾 多✽	shift	verlagern
 秒 ⽲➞禾 少	second	Sekunde
 称 ⽲➞禾 尓 爯✽ 稱❄	appellation	Bezeichnung
-秩 ⽲➞禾 失✽	regularity	Ordnung
+秩 ⽲➞禾 失✽  株	regularity	Ordnung
 秋 ⽲➞禾 火	autumn	Herbst
 愁 秋✽ 心	distress	Kummer
 秘 ⽲➞禾 必✽ 祕❄	secret	Geheimnis
@@ -1017,20 +1013,21 @@
 箱 ⺮➞竹 相✽	box	Schachtel
 筋 ⺮➞竹 肋	muscle	Muskel
 箇 ⺮➞竹 固✽	item	Gegenstand
-筒 ⺮➞竹 同✽	cylinder	Röhre
+筒 ⺮➞竹 同✽  管	cylinder	Röhre
 等 ⺮➞竹 寺	etc.	usw.
 算 ⺮➞竹 目 廾	calculate	rechnen
 答 ⺮➞竹 合✽	solution	Antwort
 策 ⺮➞竹 朿	scheme	Strategie
-簿 ⺮➞竹 溥✽	register	Verzeichnis
 籠 ⺮➞竹 龍✽  篭	basket	Käfig
-築 筑✽ 木	fabricate	bauen
+築 筑✽ 竹✽ 木 恐	fabricate	bauen
+簿 ⺮➞竹 溥✽ 氵➞水 尃	register	Verzeichnis
+薄 艹➞艸 溥✽ 氵➞水 尃	dilute	verdünnen
+藻 艹➞艸 澡✽ 氵➞水 喿✽	seaweed	Seetang
 人	person	Mensch
 佐 亻➞人 左✽	assistant	Assistent
 侶 亻➞人 呂✽	partner	Partner
 但 亻➞人 旦✽	however	jedoch
 住 亻➞人 主✽	dwell	wohnen
-位 亻➞人 立	rank	Rang
 仲 亻➞人 中✽	go-between	Verhältnis
 休 亻➞人 木	rest	ausruhen
 体 亻➞人 本 體❄	body	Körper
@@ -1042,6 +1039,7 @@
 伝 亻➞人 云 傳❄	transmit	übermitteln
 伎 亻➞人 支✽	performing artist	Bühnenkünstler
 仮 亻➞人 反 叚✽ 假❄	provisional	vorläufig
+位 亻➞人 立	rank	Rang
 倍 亻➞人 咅✽	double	doppelt
 伯 亻➞人 白✽	chief	Graf
 俗 亻➞人 谷✽	vulgar	volkstümlich
@@ -1074,7 +1072,6 @@
 宿 宀 佰	inn	Herberge
 傷 亻➞人 𠂉 昜✽	wound	Wunde
 保 亻➞人 呆✽	protect	bewahren
-褒 衣 保✽ 襃❄	praise	loben
 傑 亻➞人 桀✽	greatness	meisterhaft
 付 亻➞人 寸	adhere	anhaften
 符 ⺮➞竹 付✽	token	Zeichen
@@ -1089,7 +1086,7 @@
 任 亻➞人 壬✽	responsibility	Verantwortung
 賃 任✽ 貝	fare	Fahrgeld
 傾 亻➞人 頃✽	lean	sich neigen
-何 亻➞人 可✽	what	was
+何 亻➞人 可✽  伺	what	was
 荷 艹➞艸 何✽	baggage	Gepäck
 傍 亻➞人 旁✽	bystander	Außenstehender
 俺 亻➞人 奄✽	myself	icke
@@ -1123,10 +1120,6 @@
 喚 ⼝➞口 奐✽	yell	kreischen
 換 扌➞手 奐✽	interchange	wechseln
 融 鬲 虫✽	dissolve	auflösen
-施 斿 也✽	alms	Almosen
-旋 斿 疋	rotation	Drehung
-旅 斿✽ 𠂢	trip	Reise
-遊 斿✽ ⻌➞辶	play	spielen
 物 牜➞牛 勿✽	thing	Ding
 易 日 勿 昜	easy	Leichtigkeit
 賜 ⾙➞貝 易✽	grant	gewähren
@@ -1138,17 +1131,18 @@
 履 ⼫➞尸 復	footgear	Fußbekleidung
 屋 ⼫➞尸 至	roof	Dach
 握 扌➞手 屋✽	grip	greifen
+居 ⼫➞尸 古✽	reside	sich aufhalten
+据 扌➞手 居✽	set	aufstellen
 屈 ⼫➞尸 出✽	yield	sich beugen
 掘 扌➞手 屈✽	dig	graben
 堀 ⼟➞土 屈✽	ditch	Graben
-居 ⼫➞尸 古✽	reside	sich aufhalten
-据 扌➞手 居✽	set	aufstellen
 裾 衤➞衣 居✽	hem	Saum
 層 ⼫➞尸 曽✽ 層❄	stratum	Schicht
 局 ⼫➞尸 句	bureau	Behörde
 遅 尸 羊 ⻌➞辶 遲❄	slow	verspätet
 漏 氵➞水 屚✽	leak	Leck
 刷 尸 巾 刂➞刀	printing	drucken
+展 ⼫➞尸 廾 衣	unfold	entfalten
 尺 尸	shaku	Shaku
 尽 尺 冫 盡❄	exhaust	aufbrauchen
 沢 氵➞水 尺➞睪✽ 澤❄	swamp	Sumpf
@@ -1176,7 +1170,7 @@
 奈 ⼤➞大 示	Nara	Nara
 尉 尸 示 寸	military officer	Offizier
 慰 尉✽ 心	consolation	trösten
-禁 林 示	prohibition	Verbot
+禁 林✽ 示	prohibition	Verbot
 襟 衤➞衣 禁✽	collar	Kragen
 宗 宀 示	religion	Religion
 崇 山 宗✽	adore	verehren
@@ -1230,7 +1224,7 @@
 急 𠂊➞勹 彐➞彑 心 及✽	hurry	eilig
 争 𠂊➞勹 ⺕➞彑 亅 爭❄	contend	streiten
 浄 氵➞水 争✽ 淨❄	clean	sauber
-穏 ⽲➞禾 㥯✽ 穩❄	calm	Stille
+穏 ⽲➞禾 隠✽ 㥯✽ 穩❄	calm	Stille
 侵 亻➞人 彐➞彑 冖 又	encroach	eindringen
 浸 氵➞水 侵✽	immersed	eintauchen
 寝 宀 ⺦➞爿 侵✽ 寢❄	lie down	sich hinlegen
@@ -1288,7 +1282,7 @@
 半 丷➞八 二 丨 牛	half	Hälfte
 判 半✽ 刂➞刀	judgment	urteilen
 伴 亻➞人 半✽	consort	begleiten
-畔 田 半✽	paddy ridge	Feldrain
+畔 ⽥➞田 半✽	paddy ridge	Feldrain
 拳 𠔉✽ 手	fist	Faust
 券 𠔉✽ 刀	ticket	-karte
 巻 𠔉✽ 己 卷❄	scroll	Rolle
@@ -1304,10 +1298,14 @@
 矢 𠂉 大	dart	Wurfpfeil
 知 ⽮➞矢 口	know	wissen
 智 知 日	wisdom	Weisheit
-族 ⽅➞方 𠂉 矢	tribe	Sippe
 挨 扌➞手 矣✽ 厶 矢	shove	aufstoßen
 矯 ⽮➞矢 喬✽	rectify	begradigen
-橋 ⽊➞木 喬✽	bridge	Brücke
+橋 ⽊➞木 喬✽  稿	bridge	Brücke
+族 斿 矢 ⽅➞方	tribe	Sippe
+施 斿 也✽	alms	Almosen
+旋 斿 疋	rotation	Drehung
+旅 斿✽ 𠂢	trip	Reise
+遊 斿✽ ⻌➞辶	play	spielen
 矛 予 丿	halberd	Hellebarde
 柔 矛 木	tender	sanft
 務 矛✽ 攵➞攴 力	task	Aufgabe
@@ -1318,20 +1316,20 @@
 引 弓 丨	pull	ziehen
 弔 弓 丨	condolences	Beileid
 弘 弓 厶 厷✽	vast	verbreiten
-弥 弓 尓 彌❄	more and more	immer mehr
+弥 弓 尓 称 彌❄	more and more	immer mehr
 強 弓✽ 厶 虫 弘✽	strong	stark
 弱 弓 冫 羽	weak	schwach
 溺 氵➞水 弱✽	drowning	ertrinken
 沸 氵➞水 弗✽	seethe	sieden
 費 弗✽ 貝	expense	Kosten
-第 ⺮➞竹 弟✽	No.	Nr.
 弟 丷➞八 弔 丿	younger brother	jüngerer Bruder
-巧 ⼯➞工 丂✽	adroit	gewandt
-号 口 丂✽ 號❄	nickname	Chiffre
-朽 ⽊➞木 丂✽	decay	vermodern
+第 ⺮➞竹 弟✽	No.	Nr.
 誇 訁➞言 夸✽	boast	prahlen
 顎 咢✽ 頁	chin	Kinn
+朽 ⽊➞木 丂✽	decay	vermodern
 汚 氵➞水 丂 一 汙❄	dirty	schmutzig
+巧 ⼯➞工 丂✽	adroit	gewandt
+号 口 丂✽ 號❄	nickname	Chiffre
 与 丂 一 與❄	bestow	erteilen
 写 冖 与 舄✽ 寫❄	copy	kopieren
 潟 氵➞水 舄✽	lagoon	Lagune
@@ -1346,13 +1344,13 @@
 者 耂➞老 日 者❄	someone	Person
 煮 者✽ 灬➞火 煮❄	boil	brodeln
 著 艹➞艸 者✽ 著❄	renowned	auffallend
-箸 ⺮➞竹 者	chopsticks	Essstäbchen
+箸 ⺮➞竹 者✽	chopsticks	Essstäbchen
 署 罒➞网 者✽ 署❄	signature	unterschreiben
 暑 日 者✽ 暑❄	sultry	drückend
 諸 訁➞言 者✽ 諸❄	various	allerlei
-猪 ⺨➞犬 者✽ 豬❄	boar	Wildschwein
 渚 氵➞水 者✽	strand	Strand
-賭 ⾙➞貝 者	gamble	wetten
+猪 ⺨➞犬 者✽ 豬❄	boar	Wildschwein
+賭 ⾙➞貝 者✽	gamble	wetten
 峡 ⼭➞山 夹➞夾✽ 峽❄	gorge	Schlucht
 狭 ⺨➞犬 夹➞夾✽ 狹❄	cramped	eng
 挟 扌➞手 夹➞夾✽ 挾❄	sandwiched	eingeklemmt
@@ -1363,7 +1361,7 @@
 追 𠂤✽ ⻌➞辶	chase	verfolgen
 官 宀 㠯	bureaucrat	Bürokrat
 棺 ⽊➞木 官✽	coffin	Sarg
-管 ⺮➞竹 官✽	pipe	Rohr
+管 ⺮➞竹 官✽  筒	pipe	Rohr
 父	father	Vater
 交 亠 父	mingle	Umgang
 釜 父✽ 金	cauldron	Kessel
@@ -1383,9 +1381,9 @@
 露 ⻗➞雨 路✽	dew	Tautropfen
 骨 冎 月➞肉	skeleton	Gebeine
 髄 ⾻➞骨 有 ⻌➞辶 髓❄	marrow	Mark
-禍 礻➞示 咼✽ 禍❄	calamity	Unheil
 滑 氵➞水 骨✽	slippery	glatt
 渦 氵➞水 咼✽	whirlpool	Strudel
+禍 礻➞示 咼✽ 禍❄	calamity	Unheil
 鍋 釒➞金 咼✽	pot	Topf
 過 咼✽ ⻌➞辶	overdo	übertreiben
 阪 ⻖➞阜 反	Heights	Böschung
@@ -1395,7 +1393,7 @@
 隙 ⻖➞阜 小 日 小	chink	Spalt
 陪 ⻖➞阜 咅✽	auxiliary	Beisitzer
 陽 ⻖➞阜 昜✽	sunshine	Sonnenschein
-陳 ⻖➞阜 東 申✽	line up	Aufstellung
+陳 ⻖➞阜 東 申✽	line up	ausstellen
 防 ⻖➞阜 方✽	ward off	abwehren
 附 ⻖➞阜 付✽	affixed	Anhang
 院 ⻖➞阜 完✽	Inst.	Inst.
@@ -1405,7 +1403,7 @@
 陛 ⻖➞阜 比 土	highness	Majestät
 隣 ⻖➞阜 米 舛 粦✽ 鄰❄	neighboring	nebenan
 隔 ⻖➞阜 鬲✽	isolate	isolieren
-隠 ⻖➞阜 㥯✽ 乚 隱❄	conceal	verbergen
+隠 ⻖➞阜 穏✽ 㥯✽ 隱❄	conceal	verbergen
 陥 ⻖➞阜 𠂊➞勹 旧 陷❄	collapse	hineinfallen
 隊 ⻖➞阜 㒸✽	regiment	Regiment
 墜 隊✽ 土	crash	abstürzen
@@ -1413,7 +1411,6 @@
 随 陏✽ ⻌➞辶 隨❄	follow	folgsam
 穴 宀 八	hole	Loch
 空 ⽳➞穴 工✽	empty	leer
-控 扌➞手 空✽	withdraw	sich zurückhalten
 突 ⽳➞穴 大 突❄	stab	stechen
 究 ⽳➞穴 九✽	research	forschen
 窒 ⽳➞穴 至✽	plug up	verstopft
@@ -1422,6 +1419,7 @@
 窯 ⽳➞穴 羔✽	kiln	Brennofen
 窮 ⽳➞穴 躬✽	hard up	in der Klemme
 窪 ⽳➞穴 洼✽ 氵➞水 圭	depression	Senke
+控 扌➞手 空✽	withdraw	sich zurückhalten
 搾 扌➞手 窄✽	squeeze	auspressen
 探 扌➞手 㓁➞穴 木	grope	ertasten
 深 氵➞水 㓁➞穴 木	deep	tief
@@ -1448,7 +1446,7 @@
 絞 糹➞糸 交✽	strangle	wringen
 給 糹➞糸 合	salary	Gehalt
 絡 糹➞糸 各✽	entwine	sich verflechten
-結 糹➞糸 吉✽	tie	binden
+結 糹➞糸 吉✽	tie	Bund
 紹 糹➞糸 召✽	introduce	vorstellen
 紛 糹➞糸 分✽	distract	ablenken
 経 糹➞糸 圣✽ 經❄	sutra	Sutra
@@ -1504,14 +1502,14 @@
 零 ⻗➞雨 令✽	zero	Null
 齢 ⻭➞齒 令✽ 齡❄	age	Alter
 鈴 釒➞金 令✽	small bell	Glöckchen
-玲 王➞玉 令✽	tinkling	klimpern
+玲 ⺩➞玉 令✽	tinkling	klimpern
 冷 冫 令✽	cool	kühl
 領 令✽ 頁	jurisdiction	Hoheitsgebiet
 勇 甬➞用✽ 力	courage	Mut
 湧 氵➞水 勇✽	bubble up	aufwallen
 通 甬✽ ⻌➞辶	traffic	Verkehr
 踊 ⻊➞足 甬✽ 踴❄	jump	tanzen
-疑 匕 矢 マ 疋	doubt	zweifeln
+疑 匕 矢 マ 疋	doubt	Zweifel
 擬 扌➞手 疑✽	mimic	nachahmen
 凝 冫 疑✽	congeal	erstarren
 犯 ⺨➞犬 㔾➞卩✽	crime	Verbrechen
@@ -1536,12 +1534,12 @@
 酌 ⾣➞酉 勺✽	bartending	einschenken
 酎 ⾣➞酉 寸	hooch	Schnaps
 酵 ⾣➞酉 孝✽	fermentation	Gärung
+酪 ⾣➞酉 各✽	dairy products	Molkereiprodukte
 酷 ⾣➞酉 告✽	cruel	grausam
 酬 ⾣➞酉 州✽	repay	Vergeltung
-酪 ⾣➞酉 各✽	dairy products	Molkereiprodukte
-酢 ⾣➞酉 乍✽	vinegar	Essig
 酔 ⾣➞酉 卆➞卒✽ 醉❄	drunk	betrunken
 配 ⾣➞酉 己	distribute	zuteilen
+酢 ⾣➞酉 乍✽	vinegar	Essig
 酸 ⾣➞酉 夋✽	acid	Säure
 唆 ⼝➞口 夋✽	tempt	verführen
 俊 亻➞人 夋✽	sagacious	hochbegabt
@@ -1555,12 +1553,13 @@
 鼓 壴 支	drum	Trommel
 喜 壴 口	rejoice	fröhlich
 嬉 ⼥➞女 喜✽	glad	froh
-樹 ⽊➞木 尌✽	timber-trees	Gehölz
+樹 ⽊➞木 尌✽ 村	timber-trees	Gehölz
 皿	dish	Schale
 血 皿	blood	Blut
 盆 分✽ 皿	basin	Tablett
 盟 明✽ 皿	alliance	Bündnis
 盗 次 皿 盜❄	steal	stehlen
+益 䒑 八 皿	benefit	Gewinn
 温 氵➞水 日 皿 溫❄	warm	warm
 蓋 艹➞艸 盍	lid	Deckel
 監 臣 𠂉 一 皿	oversee	überwachen
@@ -1572,7 +1571,7 @@
 塩 ⼟➞土 口 皿 鹽❄	salt	Salz
 銀 釒➞金 艮✽	silver	Silber
 根 ⽊➞木 艮✽	root	Wurzel
-眼 ⽬➞目 艮✽	eyeball	Augapfel
+眼 ⽬➞目 艮✽  眠	eyeball	Augapfel
 恨 忄➞心 艮✽	resentment	übelnehmen
 限 ⻖➞阜 艮✽	limit	begrenzen
 即 艮 卩 卽❄	instant	sofort
@@ -1616,23 +1615,20 @@
 純 糹➞糸 屯✽	genuine	echt
 鈍 釒➞金 屯✽	dull	stumpf
 辛 立 十	spicy	würzig
+宰 宀 辛	superintend	Anführer
 辞 ⾆➞舌 辛 辭❄	resign	abdanken
 梓 ⽊➞木 辛	catalpa	Katalpe
-宰 宀 辛	superintend	Anführer
-壁 辟✽ 土	wall	Mauer
-璧 辟✽ 玉	holed gem	durchtriebener Edelstein
-避 辟✽ ⻌➞辶	evade	vermeiden
 新 亲✽ 斤	new	neu
 薪 艹➞艸 新✽	firewood	Brennholz
 親 亲✽ 見	parent	Eltern
-幸 土 干	happiness	glücklich
+幸 土 丷 干	happiness	glücklich
 執 幸 丸	tenacious	beharrlich
 摯 執 手	clasp	umklammern
 報 幸 𠬝 卩 又	report	Meldung
 服 月➞舟 𠬝✽ 卩 又	clothing	Kleidung
+収 丩✽ 又 收❄	income	einnehmen
 叫 ⼝➞口 丩✽	shout	schreien
 糾 糹➞糸 丩✽	twist	drehen und wenden
-収 丩✽ 又 收❄	income	einnehmen
 卑 丿 田 丿 十 卑❄	lowly	gemein
 碑 ⽯➞石 卑✽ 碑❄	tombstone	Grabstein
 陸 ⻖➞阜 坴✽ 圥 土	land	Festland
@@ -1668,8 +1664,6 @@
 積 ⽲➞禾 責✽	volume	stapeln
 債 亻➞人 責✽	bond	Schuldschein
 漬 氵➞水 責✽	pickling	einmachen
-表 衣 土	surface	Vorderseite
-俵 亻➞人 表✽	bag	Strohsäcke
 潔 氵➞水 絜✽	undefiled	unbeschmutzt
 契 丰 刀 大	pledge	geloben
 喫 ⼝➞口 契✽	consume	verzehren
@@ -1691,30 +1685,30 @@
 拝 扌➞手 一 丰 拜❄	worship	anbeten
 寿 三 丿 寸 壽✽ 壽❄	longevity	Langlebigkeit
 鋳 釒➞金 寿✽ 鑄❄	casting	Metallguss
+実 宀 三 人 實❄	reality	Wirklichkeit
 春 𡗗 日	springtime	Frühling
 椿 ⽊➞木 春	camellia	Kamelie
 泰 𡗗 氺➞水 大✽	peaceful	friedlich
-奉 𡗗 丰✽	dedicate	widmen
 奏 𡗗 天	play music	musizieren
-実 宀 三 人 實❄	reality	Wirklichkeit
-俸 亻➞人 奉✽	stipend	Lohn
+奉 𡗗 丰✽	dedicate	huldigen
 棒 ⽊➞木 奉✽	rod	Stange
-僅 亻➞人 堇✽	trifle	lediglich
-謹 訁➞言 菫✽ 謹❄	discreet	ergebenst
-勤 菫✽ 力 勤❄	diligence	emsig
-難 堇✽ 隹 難❄	difficult	schwierig
+俸 亻➞人 奉✽	stipend	Lohn
+僅 亻➞人 菫✽➞堇	trifle	lediglich
+謹 訁➞言 菫✽➞堇 謹❄	discreet	ergebenst
+勤 菫✽➞堇 力 勤❄	diligence	emsig
+難 菫✽➞堇 隹 難❄	difficult	schwierig
 漢 氵➞水 難✽ 漢❄	Sino-	chinesisch
 嘆 ⼝➞口 難✽ 嘆❄	sigh	seufzen
-華 艹➞艸 丨	splendor	prachtvoll
-垂 千 土	droop	baumeln
+華 艹➞艸 𠦒 花✽	splendor	prachtvoll
+垂 丿 𠦒 𠂹✽ 土	droop	baumeln
 唾 ⼝➞口 垂	saliva	Speichel
 睡 ⽬➞目 垂✽	drowsy	Schlummer
 乗 千 木 乘❄	ride	fahren
 剰 乗✽ 刂➞刀 剩❄	surplus	Überschuss
 今 亼 一	now	jetzt
+吟 ⼝➞口 今✽	versify	vortragen
 含 今✽ 口	include	umfassen
 貪 今✽ 貝	covet	gieren
-吟 ⼝➞口 今✽	versify	vortragen
 念 今✽ 心	wish	Gedanke
 捻 扌➞手 念✽	wrench	zwirbeln
 琴 王➞玉 王➞玉 今✽	harp	Koto-Harfe
@@ -1773,8 +1767,8 @@
 輩 非✽ 車	comrade	Genosse
 扉 戸 非✽	front door	Vordertür
 侯 亻➞人 矢	marquis	Marquis
-喉 ⼝➞口 侯✽	throat	Kehle
 候 亻➞人 侯✽	climate	Klima
+喉 ⼝➞口 侯✽	throat	Kehle
 決 氵➞水 夬✽	decide	entscheiden
 快 忄➞心 夬✽	cheerful	angenehm
 偉 亻➞人 韋✽	admirable	bedeutend
@@ -1783,19 +1777,19 @@
 衛 ⾏➞行 韋✽ 衞❄	defense	verteidigen
 韓 𠦝 韋	Korea	Korea
 干 十 乾	dry	trocknen
-肝 月➞肉 干✽	liver	Leber
 刊 干✽ 刂➞刀	publish	veröffentlichen
+肝 月➞肉 干✽	liver	Leber
 汗 氵➞水 干✽	sweat	Schweiß
 軒 ⾞➞車 干✽	flats	Häuser
+幹 𠦝 𠆢➞人 干✽	tree trunk	Stamm
 岸 山 厂 干	beach	Ufer
-幹 𠦝 𠆢➞人 干✽	tree trunk	Baumstamm
 芋 艹➞艸 于✽	potato	Kartoffel
-宇 宀 于✽	eaves	Dachvorsprung
-余 亼 二 小 示 餘❄	too much	allzu
-除 ⻖➞阜 余✽	exclude	ausschließen
+宇 宀 于✽	eaves	Weltraum
+余 𠆢➞人 于 八 示 餘❄	too much	allzu
 徐 彳 余✽	gradually	langsam
-叙 余✽ 又 敘❄	confer	schildern
 途 余✽ ⻌➞辶	route	unterwegs
+除 ⻖➞阜 余✽	exclude	ausschließen
+叙 余✽ 又 敘❄	confer	schildern
 斜 余✽ 斗	diagonal	diagonal
 塗 氵➞水 余✽ 土	paint	bemalen
 束 木 口	bundle	Bündel
@@ -1806,10 +1800,6 @@
 辣 辛 束	bitter	bitter
 速 束✽ ⻌➞辶	quick	schnell
 整 敕 正✽	organize	regulieren
-剣 僉✽ 刂➞刀 劍❄	saber	Säbel
-険 ⻖➞阜 僉✽ 險❄	precipitous	steil
-検 ⽊➞木 僉✽ 檢❄	examination	Beschau
-倹 亻➞人 僉✽ 儉❄	frugal	sparsam
 重 千 里	heavy	schwer
 腫 月➞肉 重	tumor	Tumor
 種 ⽲➞禾 重✽	species	Art
@@ -1831,8 +1821,11 @@
 疲 疒 皮✽	tired	müde
 疫 疒 殳 役✽	epidemic	Epidemie
 痛 疒 甬✽	pain	Schmerz
-癖 疒 辟✽	mannerism	Eigenart
 癒 疒 愈✽	healing	heilen
+癖 疒 辟✽	mannerism	Eigenart
+壁 辟✽ 土	wall	Mauer
+璧 辟✽ 玉	holed gem	durchtriebener Edelstein
+避 辟✽ ⻌➞辶	evade	vermeiden
 匿 匚 若	hide	verstecken
 匠 匚 斤	artisan	Zimmermann
 医 匚 矢 醫❄	doctor	Arzt
@@ -1864,8 +1857,8 @@
 膨 月➞肉 彭✽	swell	schwellen
 参 厶 大 彡✽ 參❄	visit	aufsuchen
 惨 忄➞心 参✽ 慘❄	wretched	elend
-修 攸✽ 彡	discipline	sich beherrschen
-珍 玉➞王 㐱✽ 𠆢➞人 彡	rare	selten
+修 攸✽ 彡	discipline	Studium
+珍 ⺩➞玉 㐱✽ 𠆢➞人 彡	rare	selten
 診 訁➞言 㐱✽ 𠆢➞人 彡	checkup	Diagnose
 文 亠 乂	sentence	Text
 対 文 寸 對❄	vis-a-vis	gegen
@@ -1897,39 +1890,39 @@
 黄 黃❄	yellow	gelb
 横 ⽊➞木 黄✽ 橫❄	sideways	waagerecht
 把 扌➞手 巴✽	grasp	fassen
+肥 月➞肉 巴✽	fertilizer	Dünger
 色 𠂊➞勹 巴	color	Farbton
 絶 糹➞糸 色	discontinue	unterbrechen
 艶 豊 色 艷❄	glossy	glänzend
-肥 月➞肉 巴✽	fertilizer	Dünger
 甘 廿	sweet	süß
 紺 糹➞糸 甘✽	navy blue	dunkelblau
 某 甘 木	so-and-so	soundso
 謀 訁➞言 某✽	conspire	Intrige
 媒 ⼥➞女 某✽	mediator	Vermittler
-期 其✽ 月	period	Periode
-欺 其✽ 欠	deceit	Betrug
-棋 ⽊➞木 其✽	chess piece	Shogi
-旗 ⽅➞方 𠂉 其✽	national flag	Flagge
-基 其✽ 土	fundamentals	Fundament
-碁 其✽ 石	Go	Go
 甚 甘 匹	tremendously	ungemein
 勘 甚✽ 力	intuition	Intuition
 堪 ⼟➞土 甚✽	withstand	aushalten
+期 其✽ 月	period	Periode
+欺 其✽ 欠	deceit	Betrug
+旗 斿 其✽	national flag	Flagge
+棋 ⽊➞木 其✽	chess piece	Shogi
+碁 其✽ 石	Go	Go
+基 其✽ 土	fundamentals	Fundament
 貴 中 一 貝	precious	wertvoll
 潰 氵➞水 貴✽	defile	zu Schrott verarbeiten
 遺 貴✽ ⻌➞辶	bequeath	hinterlassen
-遣 中 一 㠯 ⻌➞辶	dispatch	schicken
+遣 𠳋✽ ⻌➞辶	dispatch	schicken
 無 丿 一 灬➞火	nothingness	Nichts
 舞 無 舛✽	dance	Reigen
-且 几 一	moreover	überdies
+且 几 一  俎	moreover	überdies
 助 且✽ 力	help	helfen
 組 糹➞糸 且✽	association	Zusammensetzung
 粗 ⽶➞米 且✽	coarse	rauh
 租 ⽲➞禾 且✽	tariff	Zehnt
-狙 ⺨➞犬 且	aim at	zielen
 祖 礻➞示 且✽ 祖❄	ancestor	Vorfahre
 阻 ⻖➞阜 且✽	thwart	vereiteln
-査 木 且✽	investigate	untersuchen
+狙 ⺨➞犬 且	aim at	zielen
+査 木 且✽  查	investigate	Untersuchung
 宜 宀 且	best regards	schöne Grüße
 畳 田 冖 且 疊❄	tatami mat	Tatami-Matten
 並 䒑 业 竝❄	row	Reihe
@@ -1937,21 +1930,21 @@
 譜 訁➞言 普✽	musical score	Noten
 湿 氵➞水 日 业 濕❄	damp	feucht
 顕 业 日 頁 顯❄	appear	offenkundig
-繊 糹➞糸 土 並 戈 纖❄	slender	dünn
-霊 霝✽ 巫 靈❄	spirits	geistlich
+繊 糹➞糸 𢦏 业 纖❄	slender	dünn
+霊 霝✽ 业 巫 靈❄	spirits	geistlich
 業 丵 木 未	profession	Beruf
 撲 扌➞手 菐✽	slap	hauen
 僕 亻➞人 菐✽	me	meiner einer
 共 廿 八	together	zusammen
 供 亻➞人 共✽	submit	darbringen
+洪 氵➞水 共✽	deluge	Überschwemmung
+港 氵➞水 巷✽	harbor	Hafen
+恭 共✽ ⺗➞心	respect	respektvoll
 異 田➞囟 共	uncommon	ungewöhnlich
 翼 羽 異✽	wing	Flügel
 戴 𢦏✽ 土 ⼽➞戈 異	accept humbly	demütig entgegennehmen
-洪 氵➞水 共✽	deluge	Überschwemmung
-港 氵➞水 巷✽	harbor	Hafen
 暴 日 共 氺➞水	outburst	toben
 爆 ⽕➞火 暴✽	bomb	explodieren
-恭 共✽ ⺗➞心	respect	respektvoll
 選 巽✽ ⻌➞辶	elect	Auslese
 殿 尸 共 殳	Mr.	Hr.
 井 二 廾	well	Brunnen
@@ -1984,7 +1977,7 @@
 抵 扌➞手 氐✽	resist	widerstehen
 底 广 氐✽	bottom	Boden
 民 氏	people	Volk
-眠 ⽬➞目 民✽	sleep	schlafen
+眠 ⽬➞目 民✽  眼	sleep	schlafen
 捕 扌➞手 甫✽	catch	fangen
 哺 ⼝➞口 甫✽	suckle	säugen
 浦 氵➞水 甫✽	bay	Bucht
@@ -2008,14 +2001,14 @@
 循 彳 盾✽	sequential	Kreislauf
 派 氵➞水 𠂢✽	faction	Fraktion
 脈 月➞肉 𠂢✽	vein	Ader
-衆 血 亻➞人	masses	Massen
+衆 血 亻➞人 眾❄	masses	Massen
 逓 乕✽ ⻌➞辶 遞❄	parcel post	Kurierdienst
 段 殳	grade	Stufe
 鍛 釒➞金 段✽	forge	schmieden
 后 厂 口	empress	Kaiserin
 幻 幺 𠃌	phantasm	Trugbild
-司 𠃌 一 口	director	Direktor
-伺 亻➞人 司✽	pay respects	Höflichkeitsbesuch
+司 𠃌 一 口 可 同	director	Direktor
+伺 亻➞人 司✽  何	pay respects	Höflichkeitsbesuch
 詞 訁➞言 司✽	parts of speech	Wortart
 飼 飠➞食 司✽	domesticate	Tierhaltung
 嗣 口 冊 司✽	heir	Erbe
@@ -2034,7 +2027,6 @@
 弧 弓 瓜✽	arc	Kreisbogen
 孤 ⼦➞子 瓜✽	orphan	Waise
 繭 艹➞艸 冂 糸 虫	cocoon	Kokon
-益 䒑 八 皿	benefit	Gewinn
 暇 ⽇➞日 叚✽	spare time	Freizeit
 霞 ⻗➞雨 叚✽	haze	Nebel
 敷 旉✽ 攵➞攴	spread	ausbreiten
@@ -2044,8 +2036,6 @@
 飛 升	fly	fliegen
 沈 氵➞水 冘✽	sink	sinken
 枕 ⽊➞木 冘✽	pillow	Kopfkissen
-衰 衣 口 一	decline	verfallen
-衷 衣 口 丨	inmost	innig
 面	mask	Maske
 麺 麦➞麥 面✽ 麵❄	noodles	Nudeln
 革 廿 口	leather	Leder
@@ -2053,10 +2043,10 @@
 覇 覀➞雨 革✽ 月 霸❄	hegemony	Vorherrschaft
 声 ⼠➞士 𠃜 聲❄	voice	Stimme
 眉 𠃜 目	eyebrow	Augenbraue
-呉 口 八	give	geben
+呉 口 八 吳❄	give	geben
 娯 ⼥➞女 呉✽	recreation	Erholung
 誤 訁➞言 呉✽	mistake	Fehler
-承 了 三 水	acquiesce	hinnehmen
+承 了 手 水	acquiesce	hinnehmen
 蒸 艹➞艸 烝✽	steam	Dunst
 函 一 氺 凵 凾❄	bin	Kasten
 極 ⽊➞木 亟✽	poles	Pol
@@ -2078,13 +2068,19 @@
 籍 ⺮➞竹 耤✽ 耒 昔	enroll	registriert
 為 丶 勹 灬➞火 爲❄	do	tun
 偽 亻➞人 為✽ 僞❄	falsehood	Falschheit
-畏 田 一	apprehensive	scheu
+裏 衣 里✽	back	Rückseite
+表 衣 土	surface	Vorderseite
+俵 亻➞人 表✽	bag	Strohsäcke
+哀 衣 口	pathetic	Erbarmen
+衰 衣 口 一	decline	verfallen
+衷 衣 口 丨	inmost	innig
+褒 衣 保✽ 襃❄	praise	loben
+喪 十 口 口 長	miss	vermissen
+畏 田 長	apprehensive	scheu
 長	long	lang
 張 弓 長✽	lengthen	spannen
 帳 ⼱➞巾 長✽	notebook	Notizbuch
 髪 髟 友✽ 髮❄	hair of the head	Haupthaar
-展 ⼫➞尸 廾 衣	unfold	entfalten
-喪 十 口 口 衣	miss	vermissen
 巣 ⺍ 果 巢❄	nest	Nest
 単 ⺍ 甲 一 單❄	simple	einzeln
 戦 単✽ 戈 戰❄	war	Krieg
@@ -2108,18 +2104,18 @@
 蔦 艹➞艸 鳥	vine	Efeu
 島 鳥✽ 山 嶋 嶌	island	Insel
 暖 ⽇➞日 爰✽	warmth	Wärme
-媛 ⼥➞女 爰	beautiful woman	Maid
+媛 ⼥➞女 爰✽	beautiful woman	Maid
 援 扌➞手 爰✽	abet	unterstützen
 緩 糹➞糸 爰✽	slacken	lockern
 属 ⼫➞尸 禹 蜀✽ 屬❄	belong	zugehörig
 嘱 ⼝➞口 属✽ 囑❄	entrust	beauftragen
 偶 亻➞人 禺✽	accidentally	zufällig
+隅 ⻖➞阜 禺✽	corner	Ecke
 遇 禺✽ ⻌➞辶	interview	begegnen
 愚 禺✽ 心	foolish	albern
-隅 ⻖➞阜 禺✽	corner	Ecke
 逆 屰✽ 䒑 屮 ⻌➞辶	inverted	umgekehrt
-塑 朔✽ 土	model	modellieren
 遡 朔✽ ⻌➞辶	go upstream	stromaufwärts ziehen
+塑 朔✽ 土	model	modellieren
 岡 冂 䒑 山	Mount	Anhöhe
 鋼 釒➞金 岡✽	steel	Stahl
 綱 糹➞糸 岡✽	hawser	Tau
@@ -2147,7 +2143,6 @@
 駅 ⾺➞馬 尺➞睪✽ 驛❄	station	Bahnhof
 駐 ⾺➞馬 主✽	parking	parken
 駆 ⾺➞馬 区✽ 驅❄	drive	antreiben
-験 ⾺➞馬 僉✽ 驗❄	verification	prüfen
 騒 ⾺➞馬 蚤✽ 騷❄	boisterous	lärmen
 驚 敬✽ 馬	wonder	Erstaunen
 篤 ⺮➞竹✽ 馬	fervent	ernsthaft
@@ -2156,6 +2151,11 @@
 謄 月➞舟 龹 言 朕✽	facsimilie	Abschrift
 勝 月➞舟 劵 朕✽	victory	Sieg
 藤 艹➞艸 滕✽ 朕✽	wisteria	Glyzinie
+験 ⾺➞馬 僉✽ 驗❄	verification	prüfen
+検 ⽊➞木 僉✽ 檢❄	examination	Ermittlung
+険 ⻖➞阜 僉✽ 險❄	precipitous	steil
+倹 亻➞人 僉✽ 儉❄	frugal	sparsam
+剣 僉✽ 刂➞刀 劍❄	saber	Säbel
 虎 虍✽ 儿➞八	tiger	Tiger
 虜 虍✽ 男 虜❄	captive	Gefangener
 膚 虍 胃	skin	Haut
@@ -2164,13 +2164,13 @@
 戯 虚✽ 戈 戲❄	frolic	spaßen
 虞 虍 呉✽	uneasiness	Angst
 慮 虍✽ 思	prudence	Besonnenheit
-劇 虍 豕 刂➞刀	drama	Drama
+劇 豦✽ 虍 豕 刂➞刀	drama	Drama
 虐 虍 爪	tyrannize	quälen
 鹿 广 比	deer	Reh
-麗 丽 鹿	lovely	hübsch
 麓 林 鹿✽	foot of a mountain	Fuß eines Berges
-薦 艹➞艸 廌	recommend	empfehlen
+麗 丽 鹿	lovely	hübsch
 慶 鹿 心 夂	jubilation	jauchzen
+薦 艹➞艸 廌	recommend	empfehlen
 能 厶 月➞肉 匕 匕	ability	Fähigkeit
 熊 能 灬➞火	bear	Bär
 態 能✽ 心	attitude	Einstellung
@@ -2187,8 +2187,8 @@
 濃 氵➞水 農✽	concentrated	konzentriert
 鬼 丿 田 儿 厶	ghost	Gespenst
 塊 ⼟➞土 鬼✽	clod	Klumpen
-醜 ⾣✽➞酉 鬼	ugly	hässlich
 魂 云✽ 鬼	soul	Seele
+醜 ⾣✽➞酉 鬼	ugly	hässlich
 魔 ⿇✽➞麻 鬼	witch	Dämon
 魅 ⿁➞鬼 未✽	fascination	Faszination
 璽 爾✽ 玉	imperial seal	kaiserliches Siegel

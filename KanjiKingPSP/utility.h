@@ -38,9 +38,9 @@ enum colors
 };
 */
 
-extern int debug1, debug2, debug3;
+//extern int debug1, debug2, debug3;
 
-extern bool subpixel;						// do subpixel rendering?
+extern int subpixel;							// do subpixel rendering?
 
 //-------------------------------------------------------------------------------------------------
 typedef uint8_t	BYTE;
@@ -148,6 +148,23 @@ inline void Blend(u32 *dst, float R, float G, float B, float A = 1.0f)
 	r = r*d + R*A;
 	g = g*d + G*A;
 	b = b*d + B*A;
+
+	*dst =		(min(int(255.0f*r+0.5f), 255))
+				|	(min(int(255.0f*g+0.5f), 255) << 8)
+				|	(min(int(255.0f*b+0.5f), 255) << 16);
+}
+
+//-------------------------------------------------------------------------------------------------
+inline void BlendSubpixel(u32 *dst, float R, float G, float B, float RA, float GA, float BA)
+{
+	const u32 rgba = *dst;
+	float	r = BYTE_TO_FLOAT * ((rgba & 0x000000FF)),
+			g = BYTE_TO_FLOAT * ((rgba & 0x0000FF00) >> 8),
+			b = BYTE_TO_FLOAT * ((rgba & 0x00FF0000) >> 16);
+
+	r = r*(1.0f-RA) + R*RA;
+	g = g*(1.0f-GA) + G*GA;
+	b = b*(1.0f-BA) + B*BA;
 
 	*dst =		(min(int(255.0f*r+0.5f), 255))
 				|	(min(int(255.0f*g+0.5f), 255) << 8)
@@ -269,15 +286,85 @@ inline void DrawBMPSubPixel(void *framebuffer, float x, float y, const BYTE *dat
 	}
 }
 
+//-------------------------------------------------------------------------------------------------
+inline void DrawBMPSubPixel3(void *framebuffer, float x, float y, const BYTE *data, int w, int h, int pitch, u32 color)
+{
+	u32 *const buf = (u32*)((((u32)framebuffer)+VRAM) | UNCACHED);
+
+	const float	r = BYTE_TO_FLOAT * ((color & 0x000000FF)),
+					g = BYTE_TO_FLOAT * ((color & 0x0000FF00) >> 8),
+					b = BYTE_TO_FLOAT * ((color & 0x00FF0000) >> 16),
+					a = BYTE_TO_FLOAT * ((color)              >> 24),
+					f = 0.0013071895424837f * a;
+
+//	The fractional part of x determines whether
+//	the first column of pixels is considered red, green or blue;
+//	and the vertical alignment for y.
+	const float fX = x - int(x),
+					fY = y - int(y);
+	int						d, e;
+	if			(fX < _1_3)	d =  0;
+	else if	(fX < _2_3)	d = -1;
+	else						d = -2;
+	if			(fY < _1_3)	e =  0;
+	else if	(fY < _2_3)	e = -1;
+	else						e = -2;
+
+	const int lim_w = w / 3 + 1,
+				 lim_h = h / 3 + 1,
+					iX  = int(x),
+					iY  = int(y);
+	for(int j = 0; j < lim_h; j++)
+	for(int i = 0; i < lim_w; i++)
+	{
+		const	int	iR	= 3*i+d,
+						iG	= 3*i+d+1,
+						iB	= 3*i+d+2,
+						j0 = 3*j+e,
+						j1 = 3*j+e+1,
+						j2 = 3*j+e+2;
+		const	int	R0	= iR < 0 || iR >= w || j0 < 0 || j0 >= h ? 0 : data[j0*pitch + iR],
+						G0	= iG < 0 || iG >= w || j0 < 0 || j0 >= h ? 0 : data[j0*pitch + iG],
+						B0	= iB < 0 || iB >= w || j0 < 0 || j0 >= h ? 0 : data[j0*pitch + iB],
+						R1	= iR < 0 || iR >= w || j1 < 0 || j1 >= h ? 0 : data[j1*pitch + iR],
+						G1	= iG < 0 || iG >= w || j1 < 0 || j1 >= h ? 0 : data[j1*pitch + iG],
+						B1	= iB < 0 || iB >= w || j1 < 0 || j1 >= h ? 0 : data[j1*pitch + iB],
+						R2	= iR < 0 || iR >= w || j2 < 0 || j2 >= h ? 0 : data[j2*pitch + iR],
+						G2	= iG < 0 || iG >= w || j2 < 0 || j2 >= h ? 0 : data[j2*pitch + iG],
+						B2	= iB < 0 || iB >= w || j2 < 0 || j2 >= h ? 0 : data[j2*pitch + iB],
+						sum = R0+G0+B0+R1+G1+B1+R2+G2+B2;
+
+	// skip fully transparent pixel
+		if(sum)
+		{
+			const	int	pixX = (iX+i),
+							pixY = (iY+j);
+
+			if(pixX >= 0 && pixX < BUF_WIDTH
+			&&	pixY >= 0 && pixY < SCR_HEIGHT)
+			{
+				const	float	RA = f * (R0+R1+R2),
+								GA = f * (G0+G1+G2),
+								BA = f * (B0+B1+B2);
+
+				u32 *dst = buf + pixY*BUF_WIDTH + pixX;
+
+	//			BlendMax(dst, int(R_*255.0f+0.5f), int(G_*255.0f+0.5f), int(B_*255.0f+0.5f));
+				BlendSubpixel(dst, r, g, b, RA, GA, BA);
+			}
+		}
+	}
+}
+
 
 //-------------------------------------------------------------------------------------------------
 inline void DrawBMP(void *framebuffer, int x, int y, const BYTE *data, int w, int h, int pitch, u32 color)
 {
 	const float	R = BYTE_TO_FLOAT * ((color & 0x000000FF)),
 					G = BYTE_TO_FLOAT * ((color & 0x0000FF00) >> 8),
-					B = BYTE_TO_FLOAT * ((color & 0x00FF0000) >> 16);
+					B = BYTE_TO_FLOAT * ((color & 0x00FF0000) >> 16),
 //					A = BYTE_TO_FLOAT * ((color)              >> 24);
-	const int	A = color >> 24;
+					A = 1.537870049980777e-5f * (color        >> 24);
 
 	u32 *const buf = (u32*)((((u32)framebuffer)+VRAM) | UNCACHED);
 
@@ -296,7 +383,7 @@ inline void DrawBMP(void *framebuffer, int x, int y, const BYTE *data, int w, in
 			{
 				u32 *dst = buf + pixY*BUF_WIDTH + pixX;
 //				const float a = BYTE_TO_FLOAT * src;
-				const float a = 1.537870049980777e-5f * (A * int(src));
+				const float a = A * float(src);
 
 	//			*dst = (R) | (G << 8) | (B << 16);
 	//			BlendMax(dst, int(R*a*255.0f+0.5f), int(G*a*255.0f+0.5f), int(B*a*255.0f+0.5f));

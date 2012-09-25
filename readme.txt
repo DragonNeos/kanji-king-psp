@@ -1,7 +1,7 @@
 Kanji King PSP
 
-Digital flash cards for all Hiragana, Katakana, Heisig Kanji and JLPT vocabulary.
-Switch between 6 high-res TrueType fonts.
+Digital flash cards for all Hiragana, Katakana, Jouyou Kanji and JLPT vocabulary.
+Switch between several high-res TrueType fonts.
 Keywords, Components and Vocabulary for each Kanji in English, German and Japanese, and on- and kun- readings in Katakana and Hiragana.
 Automatic rating and progress.
 
@@ -26,8 +26,10 @@ Square.....goto list/main screen
 Start......return to main screen
 D-Pad......scroll through entries
 
+Circle+Cross...flashlight
+
 Kanji list screen:
-Select.....clear progress (of the currently selected mode)
+Select.....check or clear progress (of the currently selected mode)
 
 Vocab and Components screen:
 Select.....enable subpixel rendering

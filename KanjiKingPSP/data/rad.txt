@@ -31,7 +31,7 @@
 囗	くにがまえ	box	Begrenzung, Umzäunung
 土⼟	つちつちへん	earth	Erde, Boden, Land, unkultiviert
 士⼠	さむらいさむらいかんむり	samurai	Gelehrter, Intellektueller, Junggeselle, Soldat
-夂	ふゆがしら、ち·、のまた·かんむり	winter	schlendern, Winter
+夂⼡	ふゆがしらち·、のまた·かんむり	winter	schlendern, Winter
 夊	すいにょう、なつあし	descend	überholen
 夕	ゆう、ゆうべ、タ	evening	Abend, Sonnenuntergang
 大⼤	ダイだいかんむり、だいかしら	big	groß, riesig, gewaltig, Alter, sehr
@@ -45,7 +45,7 @@
 屮	テツ、くさのめ、めばえ	old grass	Spross, Keim
 山⼭	やまやまへん	mountain	Berg, Gebirge
 巛⼮川	まがりかわさんぽがわかわ	crooked river	Strom, Fluss
-工⼯	コウ、たくみたくみへん	craft	Arbeit
+工⼯	コウ、たくみたくみへん	craft	Arbeit, Handwerk
 己已巳	コ、キ、おのれ、イ、すでに、シ、み	snake	selbst, persönlich, eigen
 巾⼱	はばはばへん、きんへん	cloth	Tuch, Schal
 干	カン、いちじゅう、ほす	dry	trocken, Schild (Waffe)
@@ -99,7 +99,7 @@
 甘	あまい、カン	sweet	süß, wohlschmeckend
 生	セイ、ショウ、いきる、うまれる	life	geboren werden, leben, erzeugen
 用	ヨウ、もちいる	use	gebrauchen, benutzen, nötig haben
-田	た、たへん	rice field	Reisfeld
+田⽥	たたへん	rice field	Reisfeld
 疋⺪	ヒキひきへん	head count	Rolle Kleiderstoff, Stoffballen
 疒	やまいだれ	sickness	Krankheit
 癶	はつがしら	dotted tent	gespreizte Beine, zwei Hände oberhalb
@@ -205,7 +205,7 @@
 黽	べんあし、かえる、ベン	green frog	Frosch, Amphibie
 鼎	かなえ、テイ	three legged kettle	dreibeiniger Kessel, Dreifuß
 鼓	つづみ	drum beat	Trommel
-鼠	ねずみ、ねずみへん	mouse	Ratte, Maus; 1. Erdzweig 
+鼡鼠	ねずみねずみへん	mouse	Ratte, Maus; 1. Erdzweig 
 鼻⿐	はなはなへん	nose	Nase
 斉齊	セイ	equal	gleich, ordnen, gleichmäßig
 歯⻭齒	ははへん	tooth	Backenzahn, Zahn

@@ -8,6 +8,8 @@
 /// http://www.johndcook.com
 /// </summary>
 
+#ifndef SIMPLE_RNG_H
+#define SIMPLE_RNG_H
 
 typedef unsigned int uint;
 
@@ -69,14 +71,15 @@ public:
 // Produce a uniform random sample from the half open interval [0, 1).
 	float randf()
 	{
-		uint u = randUint();										// 0 <= u < 2^32
-		u &= 0x007fffff;											// random mantissa, zero exponent and sign
-		u |= 0x3F800000;											// exponent = 127 -> [1,2)
-
-		float *f = (float*)&u;
-		*f -= 1.0f;													// random float in   [0,1)
-		return *f;
+		union { float f; u32 u; } fu;
+		fu.u = randUint();										// 0 <= u < 2^32
+		fu.u &= 0x007fffff;										// random mantissa, zero exponent and sign
+		fu.u |= 0x3F800000;										// exponent = 127 -> [1,2)
+		return fu.f - 1.0f;										// random float in   [0,1)
 	}
 
 };
 
+
+
+#endif//SIMPLE_RNG_H
